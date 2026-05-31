@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Resources</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Libre+Baskerville:ital,wght@0,400;0,700;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg:       #f7f5f1;
+      --ink:      #1a1814;
+      --mid:      #6b6660;
+      --rule:     #d8d3cc;
+      --accent:   #1a3a5c;
+      --hover-bg: #edeae4;
+      --serif:    'Libre Baskerville', Georgia, serif;
+      --sans:     'DM Sans', sans-serif;
+    }
+
+    html { font-size: 16px; }
+
+    body {
+      background: var(--bg);
+      color: var(--ink);
+      font-family: var(--sans);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* ── Header ─────────────────────────────────── */
+    header {
+      padding: 4rem 0 3rem;
+      border-bottom: 1px solid var(--rule);
+      animation: fadeUp .6s ease both;
+    }
+
+    .container {
+      max-width: 720px;
+      margin: 0 auto;
+      padding: 0 2rem;
+    }
+
+    .eyebrow {
+      font-family: var(--sans);
+      font-size: .7rem;
+      font-weight: 500;
+      letter-spacing: .12em;
+      text-transform: uppercase;
+      color: var(--mid);
+      margin-bottom: .85rem;
+    }
+
+    h1 {
+      font-family: var(--serif);
+      font-size: clamp(1.8rem, 4vw, 2.6rem);
+      font-weight: 700;
+      line-height: 1.2;
+      color: var(--ink);
+      margin-bottom: .75rem;
+    }
+
+    .subtitle {
+      font-size: .95rem;
+      font-weight: 300;
+      color: var(--mid);
+      line-height: 1.65;
+      max-width: 480px;
+    }
+
+    /* ── Link list ───────────────────────────────── */
+    main {
+      flex: 1;
+      padding: 2.5rem 0 5rem;
+      animation: fadeUp .6s .1s ease both;
+    }
+
+    .section-label {
+      font-size: .68rem;
+      font-weight: 500;
+      letter-spacing: .12em;
+      text-transform: uppercase;
+      color: var(--mid);
+      margin-bottom: 1.25rem;
+    }
+
+    .link-list {
+      list-style: none;
+      border-top: 1px solid var(--rule);
+    }
+
+    /* ── Individual link item ────────────────────── */
+    .link-item {
+      border-bottom: 1px solid var(--rule);
+    }
+
+    .link-item a {
+      display: flex;
+      align-items: baseline;
+      justify-content: space-between;
+      gap: 1.5rem;
+      padding: 1.1rem 0;
+      text-decoration: none;
+      color: inherit;
+      transition: background .15s, padding .15s;
+      border-radius: 4px;
+    }
+
+    .link-item a:hover {
+      background: var(--hover-bg);
+      padding-left: .75rem;
+      padding-right: .75rem;
+      margin: 0 -.75rem;
+    }
+
+    .link-item a:hover .link-title {
+      color: var(--accent);
+    }
+
+    .link-title {
+      font-family: var(--serif);
+      font-size: 1.05rem;
+      font-weight: 400;
+      color: var(--ink);
+      transition: color .15s;
+      line-height: 1.4;
+    }
+
+    .link-meta {
+      font-size: .75rem;
+      color: var(--mid);
+      white-space: nowrap;
+      flex-shrink: 0;
+    }
+
+    /* ── Placeholder state ───────────────────────── */
+    .placeholder-note {
+      margin-top: 2.5rem;
+      padding: 1.25rem 1.5rem;
+      border-left: 3px solid var(--rule);
+      font-size: .85rem;
+      color: var(--mid);
+      line-height: 1.65;
+      font-style: italic;
+    }
+
+    /* ── Footer ──────────────────────────────────── */
+    footer {
+      padding: 1.5rem 0;
+      border-top: 1px solid var(--rule);
+      animation: fadeUp .6s .2s ease both;
+    }
+
+    footer .container {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: .75rem;
+      color: var(--mid);
+      gap: 1rem;
+      flex-wrap: wrap;
+    }
+
+    /* ── Animation ───────────────────────────────── */
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(12px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    @media (max-width: 480px) {
+      .link-item a { flex-direction: column; gap: .25rem; }
+      .link-meta   { align-self: flex-start; }
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <div class="container">
+      <p class="eyebrow">American Bar Association</p>
+      <h1>Resources &amp; Working Documents</h1>
+      <p class="subtitle">A shared workspace for documents, tools, and reference materials prepared for select audiences.</p>
+    </div>
+  </header>
+
+  <main>
+    <div class="container">
+      <p class="section-label">Documents</p>
+
+      <ul class="link-list">
+
+        <!-- ── Add links below this line ─────────── -->
+
+        <!-- Example format (remove this comment when adding real links):
+        <li class="link-item">
+          <a href="./your-file.html">
+            <span class="link-title">Document Title</span>
+            <span class="link-meta">Month YYYY</span>
+          </a>
+        </li>
+        -->
+
+        <!-- ── Placeholder ───────────────────────── -->
+        <li class="link-item" style="pointer-events:none;">
+          <a href="#" style="opacity:.4; cursor:default;">
+            <span class="link-title"><em>No documents yet</em></span>
+            <span class="link-meta">—</span>
+          </a>
+        </li>
+
+      </ul>
+
+      <p class="placeholder-note">
+        Documents will appear here as they are added. Each entry links directly to a hosted HTML file in this repository.
+      </p>
+    </div>
+  </main>
+
+  <footer>
+    <div class="container">
+      <span>American Bar Association</span>
+      <span id="updated"></span>
+    </div>
+  </footer>
+
+  <script>
+    // Show last-modified date in footer
+    const d = new Date(document.lastModified);
+    const fmt = d.toLocaleDateString('en-US', { year: 'numeric', month: 'long' });
+    document.getElementById('updated').textContent = 'Updated ' + fmt;
+  </script>
+
+</body>
+</html>
