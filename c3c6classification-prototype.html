@@ -1,0 +1,715 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>501(c)(3) / 501(c)(6) Classification Tool — Prototype</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght,SOFT@9..144,300..600,0..100&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#F4EFE3;
+  --surface:#FBF7EC;
+  --surface-alt:#EDE6D4;
+  --ink:#1A1815;
+  --ink-soft:#48453E;
+  --ink-muted:#807C70;
+  --rule:#D6CDB8;
+  --rule-strong:#B8AE93;
+  --accent:#5C3D14;
+  --accent-soft:#8B6534;
+
+  --c3-bg:#DEEAD3;
+  --c3-text:#2D4A1E;
+  --c3-deep:#1B2F12;
+
+  --c6-bg:#ECD9D2;
+  --c6-text:#6B2A1B;
+  --c6-deep:#481B12;
+
+  --dual-bg:#EFDCB4;
+  --dual-text:#6B4818;
+  --dual-deep:#3F2A0A;
+
+  --escalate-bg:#D2D0C7;
+  --escalate-text:#2A2A28;
+  --escalate-deep:#1A1A18;
+
+  --font-display:'Fraunces',Georgia,serif;
+  --font-body:'IBM Plex Sans',system-ui,-apple-system,sans-serif;
+  --font-mono:'IBM Plex Mono',ui-monospace,monospace;
+}
+
+*{box-sizing:border-box;margin:0;padding:0}
+
+html,body{background:var(--bg);color:var(--ink);font-family:var(--font-body);font-size:16px;line-height:1.6;-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale}
+
+body{min-height:100vh;display:flex;flex-direction:column}
+
+a{color:inherit}
+
+.frame{flex:1;width:100%;max-width:780px;margin:0 auto;padding:48px 32px 64px;display:flex;flex-direction:column}
+
+.masthead{display:flex;justify-content:space-between;align-items:flex-end;padding-bottom:20px;border-bottom:1px solid var(--rule);margin-bottom:48px}
+
+.masthead-title{font-family:var(--font-display);font-variation-settings:'opsz' 14, 'wght' 500, 'SOFT' 30;font-size:18px;font-weight:500;letter-spacing:-0.01em;color:var(--ink)}
+
+.masthead-meta{font-family:var(--font-mono);font-size:11px;color:var(--ink-muted);letter-spacing:0.06em;text-transform:uppercase}
+
+.intro{margin-bottom:48px}
+
+.eyebrow{font-family:var(--font-mono);font-size:11px;color:var(--accent);letter-spacing:0.14em;text-transform:uppercase;font-weight:500;margin-bottom:18px}
+
+.intro-title{font-family:var(--font-display);font-variation-settings:'opsz' 80, 'wght' 400, 'SOFT' 50;font-size:48px;font-weight:400;line-height:1.05;letter-spacing:-0.02em;color:var(--ink);margin-bottom:20px}
+
+.intro-title em{font-style:italic;font-variation-settings:'opsz' 80, 'wght' 400, 'SOFT' 100;color:var(--accent)}
+
+.intro-lede{font-size:17px;line-height:1.65;color:var(--ink-soft);max-width:580px;margin-bottom:32px}
+
+.intro-cta{display:inline-flex;align-items:center;gap:10px;background:var(--ink);color:var(--surface);border:none;font-family:var(--font-body);font-size:14px;font-weight:500;padding:14px 22px;cursor:pointer;letter-spacing:0.02em;transition:background 0.15s ease;border-radius:2px}
+
+.intro-cta:hover{background:var(--accent)}
+
+.intro-cta svg{width:14px;height:14px}
+
+.intro-meta{margin-top:36px;padding-top:24px;border-top:1px solid var(--rule);font-size:13px;color:var(--ink-muted);line-height:1.6}
+
+.intro-meta strong{color:var(--ink-soft);font-weight:500}
+
+.stage{flex:1}
+
+.step-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:32px;padding-bottom:18px;border-bottom:1px solid var(--rule)}
+
+.step-counter{display:inline-flex;align-items:baseline;gap:10px}
+
+.step-counter-num{font-family:var(--font-display);font-variation-settings:'opsz' 60, 'wght' 400, 'SOFT' 50;font-size:36px;line-height:1;color:var(--accent);font-weight:400}
+
+.step-counter-label{font-family:var(--font-mono);font-size:11px;color:var(--ink-muted);letter-spacing:0.12em;text-transform:uppercase;font-weight:500}
+
+.back-btn{background:transparent;border:none;cursor:pointer;font-family:var(--font-body);font-size:13px;color:var(--ink-muted);display:inline-flex;align-items:center;gap:6px;padding:6px 0;transition:color 0.15s}
+
+.back-btn:hover{color:var(--ink)}
+
+.back-btn[disabled]{visibility:hidden}
+
+.back-btn svg{width:14px;height:14px}
+
+.question{font-family:var(--font-display);font-variation-settings:'opsz' 36, 'wght' 400, 'SOFT' 50;font-size:32px;line-height:1.2;letter-spacing:-0.015em;color:var(--ink);margin-bottom:14px;max-width:640px}
+
+.helper{font-size:15px;color:var(--ink-soft);line-height:1.6;margin-bottom:32px;max-width:580px;padding-left:14px;border-left:2px solid var(--rule-strong);font-style:italic}
+
+.options{display:flex;flex-direction:column;gap:10px}
+
+.option{background:var(--surface);border:1px solid var(--rule);padding:18px 22px;text-align:left;cursor:pointer;font-family:var(--font-body);color:var(--ink);transition:all 0.15s ease;border-radius:2px;display:block;width:100%;position:relative}
+
+.option:hover{background:var(--surface-alt);border-color:var(--rule-strong);transform:translateX(2px)}
+
+.option:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+
+.option-label{font-size:15px;font-weight:500;line-height:1.4}
+
+.option-desc{font-size:13px;color:var(--ink-muted);margin-top:6px;line-height:1.55}
+
+.option-arrow{position:absolute;right:22px;top:50%;transform:translateY(-50%);opacity:0;transition:opacity 0.15s,transform 0.15s;color:var(--accent)}
+
+.option:hover .option-arrow{opacity:1;transform:translateY(-50%) translateX(2px)}
+
+.option-arrow svg{width:16px;height:16px;display:block}
+
+.result-tag{display:inline-flex;align-items:center;gap:8px;padding:6px 14px;font-family:var(--font-mono);font-size:11px;font-weight:500;letter-spacing:0.12em;text-transform:uppercase;margin-bottom:24px;border-radius:2px}
+
+.result-tag.c3{background:var(--c3-bg);color:var(--c3-deep)}
+.result-tag.c6{background:var(--c6-bg);color:var(--c6-deep)}
+.result-tag.dual{background:var(--dual-bg);color:var(--dual-deep)}
+.result-tag.escalate{background:var(--escalate-bg);color:var(--escalate-deep)}
+
+.result-tag-dot{width:8px;height:8px;border-radius:50%;background:currentColor}
+
+.result-title{font-family:var(--font-display);font-variation-settings:'opsz' 60, 'wght' 400, 'SOFT' 50;font-size:40px;line-height:1.15;letter-spacing:-0.018em;color:var(--ink);margin-bottom:20px;max-width:640px}
+
+.result-rationale{font-size:17px;line-height:1.65;color:var(--ink);margin-bottom:40px;max-width:600px}
+
+.section-heading{font-family:var(--font-mono);font-size:11px;color:var(--ink-muted);letter-spacing:0.12em;text-transform:uppercase;font-weight:500;margin-bottom:16px;padding-bottom:8px;border-bottom:1px solid var(--rule)}
+
+.path-block{margin-bottom:40px}
+
+.path-rows{display:flex;flex-direction:column;gap:0}
+
+.path-row{display:grid;grid-template-columns:200px 1fr;gap:24px;padding:12px 0;border-bottom:1px solid var(--rule);font-size:14px;line-height:1.5}
+
+.path-row:last-child{border-bottom:none}
+
+.path-q{color:var(--ink-muted);font-family:var(--font-mono);font-size:12px;letter-spacing:0.04em;text-transform:uppercase;padding-top:2px}
+
+.path-a{color:var(--ink);font-weight:500}
+
+.considerations-block{margin-bottom:40px}
+
+.consideration{display:flex;gap:14px;padding:14px 0;border-bottom:1px solid var(--rule);font-size:14px;line-height:1.65;color:var(--ink-soft)}
+
+.consideration:last-child{border-bottom:none}
+
+.consideration-mark{flex-shrink:0;width:20px;font-family:var(--font-display);font-variation-settings:'opsz' 14, 'wght' 500, 'SOFT' 50;color:var(--accent);font-size:14px;padding-top:1px;text-align:right}
+
+.actions{display:flex;gap:12px;flex-wrap:wrap;margin-bottom:48px}
+
+.action-btn{display:inline-flex;align-items:center;gap:8px;background:transparent;border:1px solid var(--rule-strong);font-family:var(--font-body);font-size:13px;font-weight:500;color:var(--ink);padding:10px 18px;cursor:pointer;border-radius:2px;transition:all 0.15s}
+
+.action-btn:hover{background:var(--surface);border-color:var(--ink-soft)}
+
+.action-btn.primary{background:var(--ink);color:var(--surface);border-color:var(--ink)}
+
+.action-btn.primary:hover{background:var(--accent);border-color:var(--accent)}
+
+.action-btn svg{width:14px;height:14px}
+
+.disclaimer{font-size:12px;color:var(--ink-muted);line-height:1.65;padding:18px 22px;background:var(--surface-alt);border-left:3px solid var(--rule-strong);margin-bottom:40px;font-style:italic}
+
+.footer{margin-top:auto;padding-top:32px;border-top:1px solid var(--rule);display:flex;justify-content:space-between;align-items:center;font-family:var(--font-mono);font-size:11px;color:var(--ink-muted);letter-spacing:0.04em}
+
+.footer-meta{display:flex;gap:20px}
+
+.toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%);background:var(--ink);color:var(--surface);padding:12px 20px;font-size:13px;border-radius:2px;opacity:0;pointer-events:none;transition:opacity 0.25s, transform 0.25s;font-family:var(--font-body)}
+
+.toast.show{opacity:1;transform:translateX(-50%) translateY(-4px)}
+
+@media (max-width:640px){
+  .frame{padding:32px 20px 48px}
+  .intro-title{font-size:36px}
+  .question{font-size:24px}
+  .result-title{font-size:30px}
+  .path-row{grid-template-columns:1fr;gap:4px}
+  .path-q{padding-top:0}
+  .step-counter-num{font-size:28px}
+}
+
+@media print{
+  body{background:white}
+  .back-btn,.actions,.intro-cta,.option-arrow{display:none}
+  .frame{max-width:none;padding:24px}
+  .option{break-inside:avoid}
+}
+</style>
+</head>
+<body>
+<div class="frame">
+  <header class="masthead">
+    <div class="masthead-title">Classification tool</div>
+    <div class="masthead-meta">Prototype · v0.1</div>
+  </header>
+  <main class="stage" id="stage"></main>
+  <footer class="footer">
+    <span>501(c)(3) / 501(c)(6) classification</span>
+    <span class="footer-meta">
+      <span>Proof of concept</span>
+      <span>Not legal or tax advice</span>
+    </span>
+  </footer>
+</div>
+<div class="toast" id="toast">Summary copied to clipboard</div>
+
+<script>
+const tree = {
+  start: {
+    q: "What kind of decision is this?",
+    helper: "Pick the framing that fits the question in front of you — we'll branch from there.",
+    label: "Decision type",
+    options: [
+      { l: "Revenue or funding source", d: "Incoming money — a gift, grant, sponsorship, or other revenue", v: "Revenue", n: "rev_q1" },
+      { l: "Expense or activity", d: "An outgoing program, initiative, or set of activities", v: "Expense", n: "exp_q1" }
+    ]
+  },
+  rev_q1: {
+    q: "What is the source of the funds?",
+    label: "Funding source",
+    options: [
+      { l: "Member dues or member fees", v: "Member dues", n: "result_c6_dues" },
+      { l: "Private foundation grant", v: "Private foundation grant", n: "rev_pf" },
+      { l: "Government grant or contract", v: "Government grant", n: "rev_gov" },
+      { l: "Corporate sponsorship", v: "Corporate sponsorship", n: "rev_corp" },
+      { l: "Individual donor or gift", v: "Individual gift", n: "rev_ind" },
+      { l: "Other association revenue", d: "Registration fees, product sales, royalties, fees for service", v: "Other association revenue", n: "rev_other" }
+    ]
+  },
+  rev_pf: {
+    q: "Is the grant for a charitable or educational purpose?",
+    helper: "Private foundations are themselves c3 entities and almost always restrict grants to c3-eligible purposes.",
+    label: "Grant purpose",
+    options: [
+      { l: "Yes — charitable, educational, or research", v: "Charitable / educational", n: "result_c3_pf" },
+      { l: "No, or unclear", v: "Unclear", n: "result_escalate_pf" }
+    ]
+  },
+  rev_gov: {
+    q: "What is the primary purpose of this grant or contract?",
+    label: "Grant purpose",
+    options: [
+      { l: "Charitable, educational, or research serving the public", v: "Public / charitable purpose", n: "result_c3_gov" },
+      { l: "Trade, industry, or profession-specific benefit", v: "Industry / trade benefit", n: "result_c6_gov" },
+      { l: "Substantially both", v: "Mixed", n: "result_dual_gov" }
+    ]
+  },
+  rev_corp: {
+    q: "What is the sponsor's money paying for?",
+    label: "Sponsored activity",
+    options: [
+      { l: "Charitable or educational programming", d: "E.g., access-to-justice initiative, public legal education, pro bono training", v: "Charitable programming", n: "result_c3_corp" },
+      { l: "Member-benefit programming", d: "E.g., annual meeting, networking, trade conference, member CLE", v: "Member-benefit programming", n: "result_c6_corp" },
+      { l: "An event with substantial elements of both", v: "Mixed event", n: "result_dual_corp" }
+    ]
+  },
+  rev_ind: {
+    q: "Does the donor want or need a charitable contribution deduction?",
+    label: "Deduction needed",
+    options: [
+      { l: "Yes", d: "Donor is giving to receive a deduction, or this is a typical individual gift", v: "Yes", n: "result_c3_ind_ded" },
+      { l: "No, or not relevant", d: "Donor is indifferent, or the contribution isn't deduction-eligible regardless", v: "No", n: "rev_ind_2" }
+    ]
+  },
+  rev_ind_2: {
+    q: "Is the gift restricted to a specific purpose?",
+    label: "Gift restriction",
+    options: [
+      { l: "Yes — for a charitable or educational purpose", v: "Restricted: charitable", n: "result_c3_ind_restr" },
+      { l: "Yes — for advocacy, the profession, or member-facing work", v: "Restricted: profession", n: "result_c6_ind_restr" },
+      { l: "No restrictions", v: "Unrestricted", n: "result_c6_ind_unrestr" }
+    ]
+  },
+  rev_other: {
+    q: "What is the underlying program generating this revenue?",
+    label: "Underlying program",
+    options: [
+      { l: "A charitable or educational program", d: "E.g., pro bono training, public-facing legal education", v: "Charitable / educational", n: "result_c3_other" },
+      { l: "Member-benefit programming", d: "E.g., member CLE, conference registration, certification fees", v: "Member-benefit", n: "result_c6_other" },
+      { l: "Unclear or mixed — possible UBIT exposure", v: "Mixed / unclear", n: "result_escalate_other" }
+    ]
+  },
+  exp_q1: {
+    q: "Who is the primary beneficiary of this activity?",
+    helper: "Look at who the activity is principally designed to help. Incidental benefit to the other group is fine.",
+    label: "Primary beneficiary",
+    options: [
+      { l: "The general public or a charitable class", d: "E.g., low-income litigants, students, underrepresented communities, the courts", v: "Public / charitable class", n: "exp_c3_gate1" },
+      { l: "Members and the profession", d: "Practitioners, the bar as a whole, the industry", v: "Members / profession", n: "exp_c6" },
+      { l: "Substantially both — dual-use", v: "Both substantially", n: "result_dual_exp" }
+    ]
+  },
+  exp_c3_gate1: {
+    q: "Does the activity involve lobbying?",
+    helper: "Lobbying means attempting to influence legislation — including both direct contact with legislators and grassroots appeals to the public.",
+    label: "Lobbying involved",
+    options: [
+      { l: "No lobbying", v: "None", n: "exp_c3_gate2" },
+      { l: "Yes, but insubstantial or within §501(h) limits", v: "Insubstantial", n: "exp_c3_gate2" },
+      { l: "Yes, and it would be substantial", v: "Substantial", n: "result_c6_lobby" }
+    ]
+  },
+  exp_c3_gate2: {
+    q: "Does the activity involve any political campaign intervention?",
+    helper: "Supporting or opposing candidates for public office in any form — even nominally non-partisan.",
+    label: "Political activity",
+    options: [
+      { l: "No", v: "None", n: "exp_c3_gate3" },
+      { l: "Yes", v: "Yes", n: "result_escalate_political" }
+    ]
+  },
+  exp_c3_gate3: {
+    q: "Does the activity provide more than incidental private benefit to specific members?",
+    helper: "If members receive significant direct benefit — referrals, business development, exclusive access — the activity cannot live in the c3.",
+    label: "Private benefit",
+    options: [
+      { l: "No — member benefit is incidental", v: "Incidental", n: "result_c3_exp" },
+      { l: "Yes — members are substantial direct beneficiaries", v: "Substantial", n: "result_c6_private_benefit" }
+    ]
+  },
+  exp_c6: {
+    q: "Does the activity advance the common business interests of the profession as a whole?",
+    helper: "c6 activity must serve the line of business broadly — not just particular members' individual businesses.",
+    label: "Common interest",
+    options: [
+      { l: "Yes — it serves the profession or industry generally", v: "Yes", n: "result_c6_exp" },
+      { l: "No — it primarily benefits one or a few specific members", v: "No — particular", n: "result_escalate_private" }
+    ]
+  },
+
+  result_c6_dues: { r: true, c: "c6", t: "Belongs in the c6",
+    rationale: "Member dues are c6 revenue by definition — the funds members pay to belong to the association and receive the benefits of membership.",
+    notes: [
+      "Track the lobbying portion of dues for §6033(e) proxy-tax and member-notice purposes.",
+      "Dues are not charitable contributions; the lobbying-attributable portion is also not deductible as a business expense."
+    ]
+  },
+  result_c3_pf: { r: true, c: "c3", t: "Belongs in the c3",
+    rationale: "Private foundation grants for charitable or educational purposes go to the c3. The foundation will require c3 status, and the use of funds must align with the grant agreement.",
+    notes: [
+      "Confirm the grant agreement aligns with the c3's exempt purposes.",
+      "Meet any expenditure-responsibility and reporting requirements the foundation imposes.",
+      "Set up restricted-fund tracking separate from general c3 revenue."
+    ]
+  },
+  result_escalate_pf: { r: true, c: "escalate", t: "Escalate for review",
+    rationale: "Private foundations rarely fund non-c3 purposes. If this grant does not appear charitable or educational, either the structure is not what it seems or the grant has been mischaracterized. Counsel should review before funds are accepted.",
+    notes: [
+      "Confirm the grantor's classification and the actual purpose of the grant.",
+      "Read the grant agreement carefully — restrictions, reversionary clauses, reporting.",
+      "Loop in tax counsel before booking."
+    ]
+  },
+  result_c3_gov: { r: true, c: "c3", t: "Belongs in the c3",
+    rationale: "Government funding for charitable, educational, or research purposes goes to the c3. These grants typically bring their own compliance regime on top of c3 requirements.",
+    notes: [
+      "Confirm the applicable compliance regime (federal: 2 CFR 200; state: state rules).",
+      "Set up restricted-fund tracking and any required indirect-cost rate.",
+      "Confirm lobbying restrictions in the grant terms — federal grants generally bar use of grant funds for lobbying."
+    ]
+  },
+  result_c6_gov: { r: true, c: "c6", t: "Belongs in the c6",
+    rationale: "Government funding for trade, industry, or profession-specific purposes goes to the c6. The activity serves the membership and the line of business rather than a charitable class.",
+    notes: [
+      "Confirm no charitable-class component is being inadvertently routed to the c6.",
+      "Track separately if the grant has its own compliance regime."
+    ]
+  },
+  result_dual_gov: { r: true, c: "dual", t: "Allocate between the c6 and the c3",
+    rationale: "When a single grant funds both charitable/educational work and member-facing work, the funds should be allocated between the entities using a documented, defensible methodology under a written cost-sharing agreement.",
+    notes: [
+      "Build the allocation methodology before accepting the grant, not after.",
+      "Document the basis — time-and-effort, program cost, beneficiary count.",
+      "Many funders prefer a single grantee — the c3 is usually preferred when c3-eligible, with a subgrant or services agreement to the c6."
+    ]
+  },
+  result_c3_corp: { r: true, c: "c3", t: "Belongs in the c3",
+    rationale: "Corporate sponsorship of charitable or educational programming is c3 revenue. Watch the line between a qualified sponsorship payment (no UBIT) and advertising (UBIT-exposed).",
+    notes: [
+      "Apply the qualified sponsorship payment rules — acknowledgment is fine; quantitative product claims, comparisons, or endorsements convert it to advertising.",
+      "Confirm the sponsorship agreement does not create donor-imposed restrictions that conflict with the c3's exempt purposes."
+    ]
+  },
+  result_c6_corp: { r: true, c: "c6", t: "Belongs in the c6",
+    rationale: "Sponsorship of a member-benefit event — annual conference, trade event, networking — is c6 revenue.",
+    notes: [
+      "UBIT still applies — qualified sponsorship payment rules govern the line between acknowledgment and advertising.",
+      "Sponsorship is not deductible as a charitable contribution to the corporate sponsor (may be a business expense)."
+    ]
+  },
+  result_dual_corp: { r: true, c: "dual", t: "Allocate between the c6 and the c3",
+    rationale: "When a single sponsorship covers an event with substantial charitable and member-benefit elements, allocate it between the entities. Common at annual meetings that combine CLE and networking with a public-service component.",
+    notes: [
+      "Document the allocation methodology (program-cost or attendee-time basis).",
+      "Consider splitting the sponsorship into two named agreements upstream — cleaner than a back-end allocation."
+    ]
+  },
+  result_c3_ind_ded: { r: true, c: "c3", t: "Belongs in the c3",
+    rationale: "Donors seeking a charitable contribution deduction can only give to the c3. The receiving activity must itself be c3-eligible — if it is not, restructure or decline rather than misroute the gift.",
+    notes: [
+      "If the donor's intended use is not c3-eligible, the gift cannot honor that intent through the c3. Have a candid conversation.",
+      "Issue proper written acknowledgment for gifts of $250 or more."
+    ]
+  },
+  result_c3_ind_restr: { r: true, c: "c3", t: "Belongs in the c3",
+    rationale: "A gift restricted to a charitable or educational purpose belongs in the c3 regardless of whether the donor is seeking a deduction.",
+    notes: [
+      "Document the restriction; restricted-fund accounting applies.",
+      "Confirm the restriction is consistent with the c3's exempt purposes."
+    ]
+  },
+  result_c6_ind_restr: { r: true, c: "c6", t: "Belongs in the c6",
+    rationale: "A gift restricted to advocacy, profession-building, or member-facing work belongs in the c6. The gift is not deductible as a charitable contribution — and the donor should not be told otherwise.",
+    notes: [
+      "Document the restriction.",
+      "Confirm the donor understands the gift is not charitable-deductible.",
+      "Watch for any lobbying component — affects §6033(e) treatment."
+    ]
+  },
+  result_c6_ind_unrestr: { r: true, c: "c6", t: "Default to the c6 — but worth a strategic look",
+    rationale: "An unrestricted individual gift where the donor is not seeking a deduction defaults to the c6. But this is a strategic decision: if the donor is open to it, routing through the c3 may unlock the deduction and strengthen the c3's public-support test.",
+    notes: [
+      "Consider asking the donor whether a c3 gift would be preferable.",
+      "If significant in size, run past development leadership before booking."
+    ]
+  },
+  result_c3_other: { r: true, c: "c3", t: "Belongs in the c3",
+    rationale: "Program revenue tied to charitable or educational activity belongs in the c3, even when it takes the form of registration fees or program income.",
+    notes: [
+      "Confirm the program is genuinely c3-eligible — not just labeled that way.",
+      "Consider UBIT exposure if the program has commercial characteristics."
+    ]
+  },
+  result_c6_other: { r: true, c: "c6", t: "Belongs in the c6",
+    rationale: "Member-facing program revenue — registration fees, certification fees, member CLE — belongs in the c6.",
+    notes: [
+      "Watch for UBIT exposure on non-member revenue from commercial activities.",
+      "Apply member-benefit reporting requirements."
+    ]
+  },
+  result_escalate_other: { r: true, c: "escalate", t: "Escalate for review",
+    rationale: "Mixed or unclear program revenue carries both UBIT risk and entity-allocation questions. Talk to finance and tax counsel before booking.",
+    notes: [
+      "Document the program's character and beneficiary mix.",
+      "Consider whether the program itself should be restructured to align cleanly with one entity."
+    ]
+  },
+  result_dual_exp: { r: true, c: "dual", t: "Allocate between the c6 and the c3",
+    rationale: "Activities that genuinely serve both the public/charitable class and the members in substantial measure should be split between the entities under a documented allocation methodology.",
+    notes: [
+      "Memorialize the allocation in a written cost-sharing agreement.",
+      "Use a defensible basis — time-and-effort, program cost, beneficiary count.",
+      "Be honest about the split — the IRS pays close attention to allocations that look convenient rather than principled.",
+      "If lobbying is involved, the lobbying share must live in the c6, not the c3."
+    ]
+  },
+  result_c6_lobby: { r: true, c: "c6", t: "Belongs in the c6",
+    rationale: "Substantial lobbying cannot live in the c3 — the c3 must keep lobbying insubstantial (or within §501(h) election limits). Substantial lobbying belongs in the c6, where it is permitted without quantitative limit, subject to dues-deductibility and proxy-tax rules.",
+    notes: [
+      "Track lobbying expenditures for §6033(e) member-notice and proxy-tax purposes.",
+      "If the c3 has a §501(h) election, model whether the lobbying could fit within the election's limits before moving it to the c6.",
+      "Confirm there is no political campaign intervention component."
+    ]
+  },
+  result_escalate_political: { r: true, c: "escalate", t: "Escalate immediately",
+    rationale: "Political campaign intervention is absolutely prohibited for c3s and sharply restricted for c6s (subject to §527(f) tax and proxy-tax considerations). This generally calls for a different vehicle — PAC, c4, or separate segregated fund. Do not proceed without counsel.",
+    notes: [
+      "Engage tax counsel and election-law counsel immediately.",
+      "Confirm whether the activity is genuinely candidate-related or non-partisan issue advocacy — the line is fact-specific.",
+      "Consider whether an affiliated PAC or c4 is the right vehicle."
+    ]
+  },
+  result_c6_private_benefit: { r: true, c: "c6", t: "Belongs in the c6 — review carefully",
+    rationale: "If members are substantial direct beneficiaries, the activity cannot live in the c3. It belongs in the c6, where serving the common business interests of members is appropriate.",
+    notes: [
+      "Confirm the activity advances the common business interests of the membership broadly — not just particular members.",
+      "Watch for UBIT exposure if the activity has commercial characteristics."
+    ]
+  },
+  result_c3_exp: { r: true, c: "c3", t: "Belongs in the c3",
+    rationale: "The activity serves a charitable class or the public, does not involve substantial lobbying or political activity, and does not provide more than incidental private benefit to members. All c3 gates passed.",
+    notes: [
+      "Re-test periodically: programs drift, and an activity that starts c3 can evolve into c6 territory.",
+      "Confirm funding sources support c3 classification.",
+      "Track lobbying carefully even when insubstantial."
+    ]
+  },
+  result_c6_exp: { r: true, c: "c6", t: "Belongs in the c6",
+    rationale: "The activity serves the common business interests of the profession or industry as a whole. This is core c6 territory.",
+    notes: [
+      "Confirm the activity is not primarily serving particular members' individual businesses.",
+      "Track any lobbying for §6033(e) purposes.",
+      "Watch for UBIT exposure if the activity has commercial characteristics."
+    ]
+  },
+  result_escalate_private: { r: true, c: "escalate", t: "Escalate for review",
+    rationale: "An activity that primarily benefits one or a few specific members may not qualify as exempt activity at all — c6 status requires serving the common business interest, not the particular business of individual members.",
+    notes: [
+      "Confirm the actual beneficiary structure of the activity.",
+      "Consider whether the activity should be restructured, priced at fair market value, or housed in a taxable subsidiary.",
+      "Loop in tax counsel."
+    ]
+  }
+};
+
+const tagLabels = { c3: "501(c)(3)", c6: "501(c)(6)", dual: "Dual — allocate", escalate: "Escalate" };
+const stage = document.getElementById("stage");
+const toast = document.getElementById("toast");
+
+let path = [];
+let answers = [];
+
+function escapeHtml(s) {
+  return String(s).replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;","'":"&#39;"}[c]));
+}
+
+function renderIntro() {
+  stage.innerHTML = `
+    <section class="intro">
+      <div class="eyebrow">A decision tool for staff</div>
+      <h1 class="intro-title">Where does this <em>belong</em> — the c6 or the c3?</h1>
+      <p class="intro-lede">
+        A guided walk-through for staff at a 501(c)(6) with a controlled 501(c)(3) subsidiary. Answer a few branching questions about the revenue source or the activity in front of you, and the tool returns a working recommendation along with the considerations that should travel with it.
+      </p>
+      <button class="intro-cta" id="start-btn">
+        Begin
+        <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5">
+          <path d="M3 8h10M9 4l4 4-4 4" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </button>
+      <div class="intro-meta">
+        <strong>How to read the output.</strong> Each path lands at one of four outcomes — c3, c6, dual (allocate between the two), or escalate (counsel required). Every result includes the path you took and the considerations a tax-counsel review would likely surface. This is a reasoning aid, not legal advice.
+      </div>
+    </section>
+  `;
+  document.getElementById("start-btn").addEventListener("click", () => {
+    path = ["start"];
+    answers = [];
+    render();
+  });
+}
+
+function render() {
+  if (path.length === 0) { renderIntro(); return; }
+  const id = path[path.length - 1];
+  const node = tree[id];
+  if (node.r) renderResult(node);
+  else renderQuestion(node);
+  window.scrollTo({ top: 0, behavior: "smooth" });
+}
+
+function renderQuestion(node) {
+  const stepNum = path.length;
+  const canBack = path.length > 0;
+  const opts = node.options.map((o, i) => `
+    <button class="option" data-idx="${i}">
+      <div class="option-label">${escapeHtml(o.l)}</div>
+      ${o.d ? `<div class="option-desc">${escapeHtml(o.d)}</div>` : ""}
+      <span class="option-arrow"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M3 8h10M9 4l4 4-4 4" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+    </button>
+  `).join("");
+
+  stage.innerHTML = `
+    <div class="step-header">
+      <div class="step-counter">
+        <span class="step-counter-num">${String(stepNum).padStart(2, "0")}</span>
+        <span class="step-counter-label">Question</span>
+      </div>
+      <button class="back-btn" ${canBack ? "" : "disabled"} id="back-btn">
+        <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M13 8H3M7 4L3 8l4 4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        Back
+      </button>
+    </div>
+    <h2 class="question">${escapeHtml(node.q)}</h2>
+    ${node.helper ? `<p class="helper">${escapeHtml(node.helper)}</p>` : ""}
+    <div class="options">${opts}</div>
+  `;
+
+  document.getElementById("back-btn").addEventListener("click", goBack);
+  stage.querySelectorAll(".option").forEach(btn => {
+    btn.addEventListener("click", () => choose(parseInt(btn.dataset.idx, 10)));
+  });
+}
+
+function renderResult(node) {
+  const pathRows = answers.map(a => `
+    <div class="path-row">
+      <div class="path-q">${escapeHtml(a.q)}</div>
+      <div class="path-a">${escapeHtml(a.a)}</div>
+    </div>
+  `).join("");
+
+  const notes = node.notes.map(n => `
+    <div class="consideration">
+      <span class="consideration-mark">§</span>
+      <div>${escapeHtml(n)}</div>
+    </div>
+  `).join("");
+
+  stage.innerHTML = `
+    <div class="step-header">
+      <div class="step-counter">
+        <span class="step-counter-num">↳</span>
+        <span class="step-counter-label">Recommendation</span>
+      </div>
+      <button class="back-btn" id="back-btn">
+        <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M13 8H3M7 4L3 8l4 4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        Back
+      </button>
+    </div>
+    <div class="result-tag ${node.c}">
+      <span class="result-tag-dot"></span>
+      ${tagLabels[node.c]}
+    </div>
+    <h2 class="result-title">${escapeHtml(node.t)}</h2>
+    <p class="result-rationale">${escapeHtml(node.rationale)}</p>
+
+    <div class="path-block">
+      <div class="section-heading">Path you took</div>
+      <div class="path-rows">${pathRows}</div>
+    </div>
+
+    <div class="considerations-block">
+      <div class="section-heading">Considerations</div>
+      ${notes}
+    </div>
+
+    <div class="actions">
+      <button class="action-btn primary" id="restart-btn">
+        <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M3 8a5 5 0 1 1 1.5 3.5M3 12V8h4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        Start over
+      </button>
+      <button class="action-btn" id="copy-btn">
+        <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="5" y="5" width="9" height="9" rx="1"/><path d="M11 5V3a1 1 0 0 0-1-1H3a1 1 0 0 0-1 1v7a1 1 0 0 0 1 1h2"/></svg>
+        Copy summary
+      </button>
+      <button class="action-btn" id="print-btn">
+        <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M4 6V2h8v4M4 12H2V7h12v5h-2M4 10h8v4H4z" stroke-linejoin="round"/></svg>
+        Print
+      </button>
+    </div>
+
+    <div class="disclaimer">
+      This prototype is a reasoning aid, not legal or tax advice. Material or novel situations should be reviewed by tax counsel. Classification is not a one-time decision — periodic re-testing of activities and revenue sources is part of good governance, since programs drift over time.
+    </div>
+  `;
+
+  document.getElementById("back-btn").addEventListener("click", goBack);
+  document.getElementById("restart-btn").addEventListener("click", restart);
+  document.getElementById("copy-btn").addEventListener("click", () => copySummary(node));
+  document.getElementById("print-btn").addEventListener("click", () => window.print());
+}
+
+function choose(idx) {
+  const id = path[path.length - 1];
+  const node = tree[id];
+  const opt = node.options[idx];
+  answers.push({ q: node.label, a: opt.v });
+  path.push(opt.n);
+  render();
+}
+
+function goBack() {
+  if (path.length <= 1) {
+    path = [];
+    answers = [];
+    render();
+    return;
+  }
+  path.pop();
+  if (answers.length) answers.pop();
+  render();
+}
+
+function restart() {
+  path = ["start"];
+  answers = [];
+  render();
+}
+
+function copySummary(node) {
+  const pathText = answers.map(a => `  ${a.q}: ${a.a}`).join("\n");
+  const notesText = node.notes.map(n => `  • ${n}`).join("\n");
+  const summary = `Classification: ${tagLabels[node.c]}
+${node.t}
+
+${node.rationale}
+
+Path:
+${pathText}
+
+Considerations:
+${notesText}
+
+Generated by the 501(c)(3) / 501(c)(6) Classification Tool (prototype). Not legal or tax advice.`;
+
+  navigator.clipboard.writeText(summary).then(() => {
+    toast.classList.add("show");
+    setTimeout(() => toast.classList.remove("show"), 2000);
+  }).catch(() => {
+    toast.textContent = "Copy failed — please select manually";
+    toast.classList.add("show");
+    setTimeout(() => toast.classList.remove("show"), 2400);
+  });
+}
+
+renderIntro();
+</script>
+</body>
+</html>
