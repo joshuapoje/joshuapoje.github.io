@@ -1,0 +1,1140 @@
+<title>ABA + TEDLaw: Integrated Implementation Schedule</title>
+<style>
+:root{
+  --paper:#F7F6F3; --paper-raised:#FFFFFF; --ink:#1B2430; --ink-soft:#55606E; --muted:#8B93A0;
+  --line:#DDD9D0; --line-strong:#C7C2B6;
+  --accent:#C1440E; --accent-soft:#F4E3D9; --accent-ink:#7A2A09;
+  --phase-a:#3B5B74; --phase-b:#2F6E5D; --phase-c:#9C7A24; --phase-d:#6B4C6B; --phase-e:#7A3B54;
+  --ok:#2F7D5D; --ok-soft:#DDEDE4; --ok-ink:#1C5A40;
+  --flag:#C13A2E; --flag-soft:#F7E0DD; --flag-ink:#8C2318;
+  --font-display:"Avenir Next","Century Gothic","Segoe UI Semibold","Segoe UI","Helvetica Neue",Arial,sans-serif;
+  --font-body:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;
+  --font-mono:"Cascadia Code","JetBrains Mono",ui-monospace,SFMono-Regular,Consolas,"Liberation Mono",monospace;
+  --radius:8px;
+}
+@media (prefers-color-scheme: dark){
+  :root{
+    --paper:#14181D; --paper-raised:#1B2129; --ink:#EDEFF2; --ink-soft:#AEB6C2; --muted:#77808C;
+    --line:#2B323B; --line-strong:#3A4048;
+    --accent:#E2703C; --accent-soft:#3B2A22; --accent-ink:#FBD9C4;
+    --phase-a:#6E93B2; --phase-b:#4F9C82; --phase-c:#CBA23E; --phase-d:#9C77A0; --phase-e:#A5637F;
+    --ok:#4FA579; --ok-soft:#20352B; --ok-ink:#A9DFC3;
+    --flag:#E0604F; --flag-soft:#402420; --flag-ink:#F5C2BA;
+  }
+}
+:root[data-theme="dark"]{
+  --paper:#14181D; --paper-raised:#1B2129; --ink:#EDEFF2; --ink-soft:#AEB6C2; --muted:#77808C;
+  --line:#2B323B; --line-strong:#3A4048;
+  --accent:#E2703C; --accent-soft:#3B2A22; --accent-ink:#FBD9C4;
+  --phase-a:#6E93B2; --phase-b:#4F9C82; --phase-c:#CBA23E; --phase-d:#9C77A0; --phase-e:#A5637F;
+  --ok:#4FA579; --ok-soft:#20352B; --ok-ink:#A9DFC3;
+  --flag:#E0604F; --flag-soft:#402420; --flag-ink:#F5C2BA;
+}
+:root[data-theme="light"]{
+  --paper:#F7F6F3; --paper-raised:#FFFFFF; --ink:#1B2430; --ink-soft:#55606E; --muted:#8B93A0;
+  --line:#DDD9D0; --line-strong:#C7C2B6;
+  --accent:#C1440E; --accent-soft:#F4E3D9; --accent-ink:#7A2A09;
+  --phase-a:#3B5B74; --phase-b:#2F6E5D; --phase-c:#9C7A24; --phase-d:#6B4C6B; --phase-e:#7A3B54;
+  --ok:#2F7D5D; --ok-soft:#DDEDE4; --ok-ink:#1C5A40;
+  --flag:#C13A2E; --flag-soft:#F7E0DD; --flag-ink:#8C2318;
+}
+*{box-sizing:border-box;}
+body{margin:0;}
+.sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0;}
+.wrap{font-family:var(--font-body);color:var(--ink);background:var(--paper);padding:0 0 3rem;}
+h1,h2,h3{font-family:var(--font-display);font-weight:600;text-wrap:balance;margin:0;}
+a{color:var(--accent-ink);}
+button, select, input{font-family:var(--font-body);}
+::selection{background:var(--accent-soft);}
+
+/* masthead */
+.masthead{padding:2rem 2rem 1.5rem;border-bottom:1px solid var(--line);}
+.eyebrow{font-family:var(--font-mono);font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--accent-ink);margin:0 0 .5rem;}
+.masthead h1{font-size:26px;line-height:1.25;max-width:44ch;}
+.masthead .sub{color:var(--ink-soft);font-size:15px;margin:.5rem 0 0;max-width:62ch;}
+.stat-row{display:flex;gap:10px;flex-wrap:wrap;margin-top:1.25rem;}
+.stat{background:var(--paper-raised);border:1px solid var(--line);border-radius:var(--radius);padding:.6rem .9rem;min-width:110px;}
+.stat .n{font-family:var(--font-mono);font-size:20px;font-variant-numeric:tabular-nums;line-height:1;}
+.stat .n.ok{color:var(--ok-ink);}
+.stat .n.flag{color:var(--flag-ink);}
+.stat .l{font-size:11.5px;color:var(--ink-soft);margin-top:3px;letter-spacing:.02em;}
+
+/* toolbar */
+.toolbar{position:sticky;top:0;z-index:20;background:var(--paper);border-bottom:1px solid var(--line);padding:.75rem 2rem;display:flex;align-items:center;gap:10px;flex-wrap:wrap;}
+.search-box{display:flex;align-items:center;gap:6px;background:var(--paper-raised);border:1px solid var(--line);border-radius:var(--radius);padding:0 10px;height:34px;min-width:240px;}
+.search-box input{border:0;background:transparent;outline:0;font-size:13px;color:var(--ink);width:100%;}
+.search-box svg{flex:none;opacity:.55;}
+.chip-row{display:flex;gap:6px;flex-wrap:wrap;}
+.chip{font-size:12px;border:1px solid var(--line);background:var(--paper-raised);color:var(--ink-soft);border-radius:999px;padding:5px 11px;cursor:pointer;display:flex;align-items:center;gap:6px;line-height:1;user-select:none;}
+.chip:hover{border-color:var(--line-strong);}
+.chip.active{color:var(--ink);border-color:var(--ink);background:var(--paper);font-weight:600;}
+.chip .sw{width:8px;height:8px;border-radius:2px;flex:none;}
+.sw-flag-ic{width:8px;height:8px;border-radius:2px;background:transparent;border:1.5px solid var(--flag);flex:none;}
+.cp-ic{width:12px;height:8px;border:1.5px solid var(--ink);border-radius:2px;flex:none;}
+.toolbar-right{margin-left:auto;display:flex;gap:8px;align-items:center;flex-wrap:wrap;}
+.edits-badge{font-size:11.5px;font-family:var(--font-mono);color:var(--accent-ink);background:var(--accent-soft);border-radius:999px;padding:5px 10px;white-space:nowrap;}
+.reset-btn{border:1px solid var(--line);background:var(--paper-raised);color:var(--ink-soft);border-radius:999px;padding:6px 12px;font-size:12px;cursor:pointer;}
+.reset-btn:hover{border-color:var(--line-strong);color:var(--ink);}
+.dl-btn{border:1px solid var(--accent);background:var(--accent);color:#fff;border-radius:999px;padding:6px 14px;font-size:12px;font-weight:600;cursor:pointer;}
+.dl-btn:hover{opacity:.9;}
+.legend-bar{display:flex;gap:16px;align-items:center;padding:.6rem 2rem 0;font-size:11.5px;color:var(--ink-soft);flex-wrap:wrap;}
+.legend-bar .li{display:flex;align-items:center;gap:5px;white-space:nowrap;}
+.legend-bar .hint{color:var(--muted);margin-left:auto;white-space:normal;}
+.diamond-ic{width:8px;height:8px;background:var(--ink);transform:rotate(45deg);flex:none;}
+.sw-complete{width:14px;height:8px;border-radius:2px;background:var(--phase-b);opacity:.4;flex:none;}
+.sw-flagged{width:14px;height:8px;border-radius:2px;background:var(--phase-b);outline:1.5px solid var(--flag);outline-offset:1px;flex:none;}
+
+/* main grid: chart + detail panel */
+.main-grid{display:grid;grid-template-columns:minmax(0,1fr) 340px;gap:0;align-items:start;padding:1.5rem 2rem 0;}
+@media (max-width:900px){.main-grid{grid-template-columns:1fr;}}
+
+.gantt-card{background:var(--paper-raised);border:1px solid var(--line);border-radius:12px;overflow:hidden;}
+.gantt-scroll{overflow-x:auto;}
+.gantt-inner{position:relative;}
+.grid-overlay{position:absolute;top:0;left:230px;right:0;bottom:0;pointer-events:none;z-index:0;}
+.gline{position:absolute;top:0;bottom:0;width:1px;background:var(--line);}
+.gline.strong{background:var(--line-strong);width:1px;}
+.gline.today{background:var(--accent);width:1.5px;}
+.gline-flag{position:absolute;top:3px;transform:translateX(-50%);font-size:9.5px;font-family:var(--font-mono);font-weight:600;white-space:nowrap;padding:2px 5px;border-radius:4px;background:var(--paper-raised);border:1px solid var(--line-strong);color:var(--ink-soft);pointer-events:auto;cursor:default;letter-spacing:.02em;}
+.gline-flag.today-lbl{color:var(--accent-ink);border-color:var(--accent);background:var(--accent-soft);}
+.gline-flag.prominent{color:#fff;border-color:var(--accent);background:var(--accent);}
+
+.ruler-row{display:flex;height:42px;border-bottom:1px solid var(--line);position:relative;}
+.ruler-label{width:230px;flex:none;position:sticky;left:0;z-index:3;background:var(--paper-raised);border-right:1px solid var(--line);}
+.ruler-track{position:relative;flex:1;}
+.week-tick{position:absolute;top:22px;height:18px;display:flex;align-items:center;font-size:10.5px;color:var(--muted);font-family:var(--font-mono);padding-left:4px;}
+
+.milestone-row{display:flex;border-bottom:1px solid var(--line);background:var(--paper);}
+.ms-label{width:230px;flex:none;position:sticky;left:0;z-index:3;background:var(--paper-raised);border-right:1px solid var(--line);display:flex;align-items:center;padding:0 14px;font-size:12px;font-weight:600;color:var(--ink-soft);letter-spacing:.02em;text-transform:uppercase;}
+.ms-track{position:relative;flex:1;}
+.ms-diamond{position:absolute;width:11px;height:11px;background:var(--ink);border:1.5px solid var(--paper-raised);transform:translate(-50%,-50%) rotate(45deg);cursor:pointer;z-index:2;transition:transform .12s;}
+.ms-diamond:hover, .ms-diamond.selected{background:var(--accent);transform:translate(-50%,-50%) rotate(45deg) scale(1.3);}
+
+.ws-row{display:flex;border-bottom:1px solid var(--line);}
+.ws-row:last-child{border-bottom:0;}
+.ws-row:hover{background:color-mix(in srgb, var(--paper) 92%, var(--ink) 4%);}
+.ws-label{width:230px;flex:none;position:sticky;left:0;z-index:3;background:var(--paper-raised);border-right:1px solid var(--line);padding:10px 14px;cursor:pointer;}
+.ws-label:hover{background:var(--accent-soft);}
+.ws-code{display:inline-block;font-family:var(--font-mono);font-size:11px;font-weight:600;color:var(--ink);background:var(--paper);border:1px solid var(--line-strong);border-radius:4px;padding:1px 6px;margin-bottom:4px;}
+.ws-name{font-size:13px;font-weight:600;line-height:1.3;}
+.ws-lead{font-size:11px;color:var(--muted);margin-top:2px;}
+.ws-count{font-size:10.5px;color:var(--muted);font-family:var(--font-mono);margin-top:3px;}
+.ws-track{position:relative;flex:1;padding:8px 0;}
+.task-bar{position:absolute;border-radius:4px;cursor:pointer;transition:opacity .15s, box-shadow .15s;box-shadow:0 0 0 0 transparent;}
+.task-bar:hover{box-shadow:0 0 0 2px var(--ink-soft) inset;}
+.task-bar.cp{box-shadow:0 0 0 1.5px var(--ink) inset;}
+.task-bar.cp:hover{box-shadow:0 0 0 2px var(--ink) inset;}
+.task-bar.selected{box-shadow:0 0 0 2px var(--accent) inset !important;}
+.task-bar.dim{opacity:.15;}
+.task-bar.st-complete{opacity:.4;}
+.task-bar.st-complete.show-check::after{content:'\2713';position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;color:#fff;text-shadow:0 0 3px rgba(0,0,0,.65);}
+.task-bar.st-flagged{outline:2px solid var(--flag);outline-offset:1px;}
+.task-bar.flash{animation:flashpulse .9s ease;}
+@keyframes flashpulse{0%,100%{box-shadow:0 0 0 2px var(--accent) inset;}50%{box-shadow:0 0 0 4px var(--accent) inset;}}
+
+/* tooltip */
+.tt{position:fixed;z-index:50;background:var(--ink);color:var(--paper);font-size:12px;border-radius:6px;padding:8px 10px;max-width:260px;pointer-events:none;display:none;line-height:1.5;box-shadow:0 4px 14px rgba(0,0,0,.25);}
+.tt b{display:block;font-family:var(--font-mono);font-size:11px;color:var(--accent-ink);opacity:.9;margin-bottom:2px;}
+.tt .ttd{font-family:var(--font-mono);font-size:11px;opacity:.75;margin-top:4px;}
+
+/* detail panel */
+.panel{position:sticky;top:64px;background:var(--paper-raised);border:1px solid var(--line);border-radius:12px;margin-left:16px;padding:1.1rem 1.2rem;min-height:200px;max-height:calc(100vh - 96px);overflow-y:auto;}
+@media (max-width:900px){.panel{position:static;margin-left:0;margin-top:16px;max-height:none;}}
+.panel-empty{color:var(--muted);font-size:13px;line-height:1.6;padding-top:1rem;}
+.panel h3{font-size:16px;margin-bottom:2px;}
+.panel .kicker{font-family:var(--font-mono);font-size:11px;color:var(--accent-ink);text-transform:uppercase;letter-spacing:.06em;margin-bottom:4px;}
+.panel .lead{font-size:12.5px;color:var(--muted);margin-bottom:12px;}
+.kv{display:flex;justify-content:space-between;gap:10px;font-size:12.5px;padding:6px 0;border-bottom:1px solid var(--line);}
+.kv:last-child{border-bottom:0;}
+.kv .k{color:var(--muted);flex:none;}
+.kv .v{text-align:right;font-weight:500;}
+.mono{font-family:var(--font-mono);font-variant-numeric:tabular-nums;}
+.badge{display:inline-block;font-size:10.5px;font-family:var(--font-mono);border-radius:4px;padding:2px 6px;font-weight:600;}
+.badge.cpb{background:var(--ink);color:var(--paper);}
+.badge.edited{background:var(--accent-soft);color:var(--accent-ink);}
+.status-pill{display:inline-block;font-size:11px;padding:3px 9px;border-radius:999px;font-weight:600;}
+.status-pill.st-pending{background:var(--paper);border:1px solid var(--line-strong);color:var(--ink-soft);}
+.status-pill.st-complete{background:var(--ok-soft);color:var(--ok-ink);}
+.status-pill.st-flagged{background:var(--flag-soft);color:var(--flag-ink);}
+.seg{display:flex;border:1px solid var(--line-strong);border-radius:8px;overflow:hidden;margin-top:6px;}
+.seg button{flex:1;border:0;background:var(--paper-raised);color:var(--ink-soft);font-size:12px;padding:7px 4px;cursor:pointer;border-right:1px solid var(--line);}
+.seg button:last-child{border-right:0;}
+.seg button:hover{background:var(--paper);}
+.seg button.on-pending{background:var(--paper);color:var(--ink);font-weight:600;}
+.seg button.on-complete{background:var(--ok-soft);color:var(--ok-ink);font-weight:600;}
+.seg button.on-flagged{background:var(--flag-soft);color:var(--flag-ink);font-weight:600;}
+.form-row{margin:10px 0;}
+.form-row label{display:block;font-size:11.5px;color:var(--muted);margin-bottom:4px;}
+.form-row input[type=date], .form-row input[type=text]{width:100%;background:var(--paper);border:1px solid var(--line-strong);border-radius:6px;padding:7px 9px;font-size:13px;color:var(--ink);font-family:var(--font-body);}
+.form-row input:focus{outline:2px solid var(--accent);outline-offset:1px;}
+.btn{border:1px solid var(--line-strong);background:var(--paper-raised);color:var(--ink);border-radius:8px;padding:7px 14px;font-size:12.5px;cursor:pointer;font-weight:600;}
+.btn:hover{border-color:var(--ink);}
+.btn.primary{background:var(--accent);border-color:var(--accent);color:#fff;}
+.btn.primary:hover{opacity:.9;}
+.btn.ghost{background:none;border:0;color:var(--muted);text-decoration:underline;padding:6px 2px;font-weight:400;cursor:pointer;font-size:12px;}
+.btn.ghost:hover{color:var(--flag-ink);}
+.btn-row{display:flex;gap:8px;margin-top:12px;align-items:center;}
+.err{color:var(--flag-ink);font-size:12px;margin-top:6px;}
+.chips-wrap{display:flex;flex-wrap:wrap;gap:5px;margin-top:6px;}
+.dep-chip{font-family:var(--font-mono);font-size:11px;background:var(--paper);border:1px solid var(--line-strong);color:var(--ink-soft);border-radius:5px;padding:2px 7px;cursor:pointer;}
+.dep-chip:hover{border-color:var(--ink);color:var(--ink);}
+.panel-section-title{font-size:11.5px;text-transform:uppercase;letter-spacing:.05em;color:var(--muted);margin:14px 0 6px;}
+.task-list-row{padding:8px 0;border-bottom:1px solid var(--line);cursor:pointer;}
+.task-list-row:last-child{border-bottom:0;}
+.task-list-row:hover .tlr-name{color:var(--accent-ink);}
+.tlr-top{display:flex;justify-content:space-between;gap:8px;font-size:12px;align-items:center;}
+.tlr-id{font-family:var(--font-mono);color:var(--muted);}
+.tlr-name{font-size:12.5px;margin-top:2px;line-height:1.4;}
+.tlr-meta{font-size:11px;color:var(--muted);margin-top:3px;font-family:var(--font-mono);}
+.panel-close{float:right;border:0;background:none;cursor:pointer;color:var(--muted);padding:2px;font-size:16px;line-height:1;}
+.panel-close:hover{color:var(--ink);}
+
+/* reference sections */
+.section{padding:2.5rem 2rem 0;max-width:1200px;}
+.section h2{font-size:18px;margin-bottom:.9rem;}
+.section .section-note{font-size:13px;color:var(--ink-soft);margin:-0.4rem 0 1rem;max-width:70ch;line-height:1.6;}
+.cp-list{columns:2;column-gap:2rem;}
+@media (max-width:700px){.cp-list{columns:1;}}
+.cp-list li{font-size:13.5px;line-height:1.8;break-inside:avoid;}
+.gate-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px;}
+.gate-card{background:var(--paper-raised);border:1px solid var(--line);border-radius:10px;padding:1rem 1.1rem;}
+.gate-card .gd{font-family:var(--font-mono);font-size:11px;color:var(--accent-ink);margin-bottom:2px;}
+.gate-card h4{font-size:14px;margin:0 0 8px;font-family:var(--font-display);font-weight:600;}
+.gate-card ul{margin:0;padding-left:18px;font-size:12.5px;color:var(--ink-soft);line-height:1.7;}
+.chain{margin-bottom:1.1rem;}
+.chain-title{font-size:13px;font-weight:600;margin-bottom:6px;}
+.chain-flow{display:flex;flex-wrap:wrap;align-items:center;gap:4px;}
+.chain-step{background:var(--paper-raised);border:1px solid var(--line);border-radius:6px;padding:5px 10px;font-size:12px;}
+.chain-arrow{color:var(--muted);flex:none;}
+.owner-table{width:100%;border-collapse:collapse;font-size:13px;}
+.owner-table th{text-align:left;font-size:11px;text-transform:uppercase;letter-spacing:.04em;color:var(--muted);font-weight:600;padding:8px 10px;border-bottom:1px solid var(--line-strong);}
+.owner-table td{padding:9px 10px;border-bottom:1px solid var(--line);vertical-align:top;}
+.owner-table tr:last-child td{border-bottom:0;}
+.owner-table td:first-child{font-weight:600;white-space:nowrap;}
+.table-scroll{overflow-x:auto;border:1px solid var(--line);border-radius:10px;}
+.footer-note{padding:2.5rem 2rem 0;font-size:12px;color:var(--muted);border-top:1px solid var(--line);margin:2.5rem 2rem 0;padding-top:1.25rem;line-height:1.7;}
+
+/* access gate */
+#gate{position:fixed;inset:0;z-index:100;background:var(--paper);display:flex;align-items:center;justify-content:center;font-family:var(--font-body);color:var(--ink);}
+body.unlocked #gate{display:none;}
+.wrap{display:none;}
+body.unlocked .wrap{display:block;}
+.gate-card{background:var(--paper-raised);border:1px solid var(--line);border-radius:14px;padding:2.2rem 2.4rem;width:min(360px,90vw);text-align:center;}
+.gate-card .glock{width:34px;height:34px;margin:0 auto 12px;color:var(--accent);display:block;}
+.gate-card h2{font-size:18px;margin:0 0 4px;}
+.gate-card p{font-size:12.5px;color:var(--muted);margin:0 0 16px;line-height:1.5;}
+.gate-card input{width:100%;background:var(--paper);border:1px solid var(--line-strong);border-radius:8px;padding:9px 11px;font-size:14px;color:var(--ink);text-align:center;letter-spacing:.06em;}
+.gate-card input:focus{outline:2px solid var(--accent);outline-offset:1px;}
+.gate-btn{margin-top:12px;width:100%;border:1px solid var(--accent);background:var(--accent);color:#fff;border-radius:8px;padding:9px 0;font-size:13px;font-weight:600;cursor:pointer;}
+.gate-btn:hover{opacity:.9;}
+.gate-err{color:var(--flag-ink);font-size:12px;margin-top:10px;min-height:15px;}
+</style>
+
+<div id="gate" role="dialog" aria-modal="true" aria-labelledby="gate-title">
+  <div class="gate-card">
+    <svg class="glock" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><rect x="4" y="10.5" width="16" height="10" rx="2"/><path d="M8 10.5V7a4 4 0 0 1 8 0v3.5"/><circle cx="12" cy="15.5" r="1.3" fill="currentColor" stroke="none"/></svg>
+    <h2 id="gate-title">Protected schedule</h2>
+    <p>ABA + TEDLaw integrated implementation schedule. Enter the access password to continue.</p>
+    <input type="password" id="gateInput" autocomplete="off" aria-label="Access password" />
+    <button class="gate-btn" id="gateBtn">Unlock</button>
+    <div class="gate-err" id="gateErr" aria-live="polite"></div>
+  </div>
+</div>
+
+<div class="wrap">
+  <h2 class="sr-only">Interactive, editable Gantt chart for the ABA and TEDLaw joint program launch, showing twelve workstreams, 142 deliverables, and 21 milestones from July 16 through October 31, 2026, with drill-down detail and in-place editing of dates, owners, and status.</h2>
+
+  <header class="masthead">
+    <p class="eyebrow">ABA + TEDLaw &middot; building future-ready lawyers</p>
+    <h1>Integrated implementation schedule</h1>
+    <p class="sub">A working Gantt of every deliverable, dependency, and decision gate between mobilization and the October 1 immersive launch &mdash; click any row, bar, or milestone to drill in, mark status, or edit dates and owners.</p>
+    <div class="stat-row" id="statRow"></div>
+  </header>
+
+  <div class="toolbar">
+    <div class="search-box">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+      <input id="searchInput" type="text" placeholder="Search by ID, deliverable, or owner" />
+    </div>
+    <div class="chip-row" id="phaseChips"></div>
+    <div class="chip" id="cpToggle"><span class="cp-ic"></span> Critical path only</div>
+    <div class="chip" id="flagToggle"><span class="sw-flag-ic"></span> Flagged only</div>
+    <div class="chip" id="hideDoneToggle">Hide completed</div>
+    <div class="toolbar-right">
+      <span class="edits-badge" id="editsBadge" hidden></span>
+      <button class="reset-btn" id="resetEditsBtn" hidden>Reset all edits</button>
+      <button class="reset-btn" id="resetBtn">Reset filters</button>
+      <button class="dl-btn" id="downloadBtn">Download updated copy</button>
+    </div>
+  </div>
+  <div class="legend-bar">
+    <span class="li"><span class="diamond-ic"></span> Milestone</span>
+    <span class="li"><span class="cp-ic"></span> Critical path</span>
+    <span class="li"><span class="sw-complete"></span> Complete</span>
+    <span class="li"><span class="sw-flagged"></span> Flagged</span>
+    <span class="hint">Click a bar to view or edit &mdash; changes save automatically in this browser. Use Download updated copy to share.</span>
+  </div>
+
+  <div class="main-grid">
+    <div class="gantt-card">
+      <div class="gantt-scroll">
+        <div class="gantt-inner" id="ganttInner">
+          <div class="grid-overlay" id="gridOverlay"></div>
+          <div class="ruler-row">
+            <div class="ruler-label"></div>
+            <div class="ruler-track" id="rulerTrack"></div>
+          </div>
+          <div class="milestone-row">
+            <div class="ms-label">Milestones</div>
+            <div class="ms-track" id="msTrack"></div>
+          </div>
+          <div id="wsRows"></div>
+        </div>
+      </div>
+    </div>
+
+    <aside class="panel" id="detailPanel">
+      <div class="panel-empty">Select a workstream, task bar, or milestone diamond to see full detail here. From a task you can set its status (pending, complete, flagged) with one click, or edit its dates and owner.</div>
+    </aside>
+  </div>
+
+  <section class="section">
+    <h2>Critical-path priorities</h2>
+    <p class="section-note">A delay in any of these must be escalated immediately with a documented schedule-recovery plan.</p>
+    <ul class="cp-list" id="cpList"></ul>
+  </section>
+
+  <section class="section">
+    <h2>Milestone approval gates</h2>
+    <p class="section-note">Each gate is a hard checkpoint &mdash; the listed approvals must be in hand before work downstream can proceed.</p>
+    <div class="gate-grid" id="gateGrid"></div>
+  </section>
+
+  <section class="section">
+    <h2>Dependency chains</h2>
+    <p class="section-note">The primary chains linking governance, messaging, learning, venue, registration, and cohort work end to end.</p>
+    <div id="chainList"></div>
+  </section>
+
+  <section class="section">
+    <h2>Owner responsibilities</h2>
+    <div class="table-scroll">
+      <table class="owner-table">
+        <thead><tr><th>Owner</th><th>Primary Gantt responsibilities</th></tr></thead>
+        <tbody id="ownerBody"></tbody>
+      </table>
+    </div>
+  </section>
+
+  <p class="footer-note">The PMO reviews this chart weekly on a rolling six-week view &mdash; current-week deliverables, critical-path activity, open approvals, unmet dependencies, and any yellow or red status. Joe updates the working chart after each review; Gina approves material changes to dates, ownership, or sequencing. Edits made here save automatically in this browser; to circulate an updated version, click <em>Download updated copy</em> &mdash; it produces a new standalone file with every edit baked in. Source: ABA + TEDLaw integrated implementation schedule.</p>
+</div>
+
+<div class="tt" id="tooltip"></div>
+
+<script type="application/json" id="tasks-data">
+[
+{"id":"EL-1","name":"Confirm executive sponsorship and governance authority","owner":"Josh Poje","start":"Jul 16","finish":"Jul 17","dependency":"None","output":"Executive authority confirmed","cp":true,"phase":"A"},
+{"id":"PM-1","name":"Activate PMO and Leadership Team","owner":"Gina","start":"Jul 16","finish":"Jul 17","dependency":"EL-1","output":"M1","cp":true,"phase":"A"},
+{"id":"PM-2","name":"Establish master tracker, risk, issue and decision logs","owner":"Joe and Gina","start":"Jul 16","finish":"Jul 20","dependency":"PM-1","output":"Project controls active","cp":true,"phase":"A"},
+{"id":"PM-3","name":"Confirm all workstream owners and reporting cadence","owner":"Gina","start":"Jul 16","finish":"Jul 20","dependency":"PM-1","output":"Ownership matrix issued","cp":true,"phase":"A"},
+{"id":"MC-1","name":"Approve initiative message architecture","owner":"Josh, Cara and Gina","start":"Jul 16","finish":"Jul 20","dependency":"EL-1","output":"Core messages approved","cp":true,"phase":"A"},
+{"id":"BD-1","name":"Establish Tier 1 firm, school and sponsor prospect lists","owner":"Gina","start":"Jul 16","finish":"Jul 22","dependency":"MC-1","output":"Priority prospect list","cp":false,"phase":"A"},
+{"id":"OP-1","name":"Build interest form and lead-routing process","owner":"Joe","start":"Jul 16","finish":"Jul 22","dependency":"MC-1","output":"Working form and routing","cp":true,"phase":"A"},
+{"id":"CD-1","name":"Finalize conference one-page overview","owner":"Elmarie and Scott","start":"Jul 16","finish":"Jul 22","dependency":"MC-1","output":"Approved PDF and print file","cp":true,"phase":"A"},
+{"id":"AM-1","name":"Finalize Annual Meeting program architecture","owner":"Gina and Nishat","start":"Jul 16","finish":"Jul 22","dependency":"MC-1","output":"Session framework","cp":true,"phase":"A"},
+{"id":"AM-2","name":"Confirm Annual Meeting speakers and roles","owner":"Gina and Nishat","start":"Jul 16","finish":"Jul 22","dependency":"AM-1","output":"Speaker roster","cp":true,"phase":"A"},
+{"id":"VH-1","name":"Verify October venue, address, capacity and host language","owner":"Laura","start":"Jul 16","finish":"Jul 22","dependency":"None","output":"Verified venue facts","cp":false,"phase":"A"},
+{"id":"BD-2","name":"Conduct PDC outreach and lead capture","owner":"Gina","start":"Jul 23","finish":"Jul 25","dependency":"BD-1, OP-1, CD-1","output":"M2","cp":false,"phase":"A"},
+{"id":"BD-3","name":"Conduct ACLEA outreach and lead capture","owner":"Gina","start":"Jul 24","finish":"Jul 26","dependency":"BD-1, OP-1, CD-1","output":"M3","cp":false,"phase":"A"},
+{"id":"BD-4","name":"Enter, categorize and assign conference leads","owner":"Joe and Gina","start":"Jul 23","finish":"Jul 29","dependency":"BD-2, BD-3","output":"Leads assigned","cp":true,"phase":"A"},
+{"id":"MC-2","name":"Issue PDC and ACLEA follow-up","owner":"Cara","start":"Jul 24","finish":"Jul 30","dependency":"BD-2, BD-3","output":"Follow-up delivered","cp":false,"phase":"A"},
+{"id":"AM-3","name":"Prepare session script and moderator guide","owner":"Gina and Nishat","start":"Jul 20","finish":"Jul 26","dependency":"AM-1, AM-2","output":"Final content","cp":true,"phase":"A"},
+{"id":"CD-2","name":"Design Annual Meeting slide deck","owner":"Elmarie and Scott","start":"Jul 20","finish":"Jul 27","dependency":"AM-3","output":"Final slide deck","cp":true,"phase":"A"},
+{"id":"CD-3","name":"Produce Annual Meeting signage and collateral","owner":"Elmarie and Scott","start":"Jul 20","finish":"Jul 27","dependency":"MC-1, OP-1","output":"M4","cp":true,"phase":"A"},
+{"id":"OP-2","name":"Complete Annual Meeting staffing and run of show","owner":"Joe and Gina","start":"Jul 22","finish":"Jul 28","dependency":"AM-1","output":"Operational plan","cp":true,"phase":"A"},
+{"id":"LE-1","name":"Conduct speaker briefing and rehearsal","owner":"Nishat","start":"Jul 27","finish":"Jul 29","dependency":"AM-3, CD-2","output":"Speakers prepared","cp":true,"phase":"A"},
+{"id":"AM-4","name":"Deliver ABA Annual Meeting public launch","owner":"Gina and Nishat","start":"Jul 31","finish":"Jul 31","dependency":"AM-2, AM-3, CD-2, CD-3, OP-2, LE-1","output":"M5","cp":true,"phase":"A"},
+{"id":"AM-5","name":"Operate welcome table and capture leads","owner":"Joe and Gina","start":"Jul 31","finish":"Jul 31","dependency":"OP-1, CD-3","output":"Lead records","cp":true,"phase":"A"},
+{"id":"AM-6","name":"Conduct immediate debrief","owner":"Gina","start":"Jul 31","finish":"Aug 1","dependency":"AM-4","output":"Lessons and actions","cp":false,"phase":"A"},
+{"id":"MC-3","name":"Send Annual Meeting thank-you and recap","owner":"Cara","start":"Aug 1","finish":"Aug 2","dependency":"AM-4","output":"Attendee follow-up","cp":true,"phase":"A"},
+{"id":"BD-5","name":"Enter and assign Annual Meeting leads","owner":"Joe and Gina","start":"Aug 1","finish":"Aug 3","dependency":"AM-5","output":"Pipeline updated","cp":true,"phase":"A"},
+{"id":"BD-6","name":"Begin personalized prospect follow-up","owner":"Relationship Owners","start":"Aug 3","finish":"Aug 7","dependency":"BD-5","output":"Meetings and next steps","cp":true,"phase":"A"},
+{"id":"MC-4","name":"Finalize Founding Cohort campaign strategy","owner":"Josh and Cara","start":"Jul 27","finish":"Aug 5","dependency":"MC-1, AM-6","output":"Campaign approved","cp":true,"phase":"B"},
+{"id":"MC-5","name":"Update website and landing pages","owner":"Josh and Cara","start":"Jul 27","finish":"Aug 6","dependency":"VH-1, MC-4","output":"Public source of truth","cp":true,"phase":"B"},
+{"id":"MC-6","name":"Launch Founding Cohort campaign","owner":"Josh and Cara","start":"Aug 6","finish":"Aug 6","dependency":"MC-4, MC-5","output":"M6","cp":true,"phase":"B"},
+{"id":"OP-3","name":"Finalize registration requirements and policies","owner":"Joe and Gina","start":"Jul 27","finish":"Aug 5","dependency":"EL-1","output":"Registration specification","cp":true,"phase":"B"},
+{"id":"EL-2","name":"Approve pricing, packages and material exceptions","owner":"Josh Poje","start":"Aug 3","finish":"Aug 7","dependency":"OP-3","output":"Pricing authority","cp":true,"phase":"B"},
+{"id":"OP-4","name":"Configure and test registration","owner":"Joe","start":"Aug 3","finish":"Aug 10","dependency":"OP-3, EL-2","output":"M7","cp":true,"phase":"B"},
+{"id":"OP-5","name":"Activate CRM stages, ownership and reporting","owner":"Joe and Gina","start":"Aug 3","finish":"Aug 10","dependency":"PM-2","output":"Pipeline operational","cp":true,"phase":"B"},
+{"id":"CD-4","name":"Finalize law firm prospectus","owner":"Elmarie and Scott","start":"Jul 27","finish":"Aug 12","dependency":"MC-1, BD-1","output":"Firm outreach tool","cp":false,"phase":"B"},
+{"id":"CD-5","name":"Finalize law school prospectus","owner":"Elmarie and Scott","start":"Jul 27","finish":"Aug 12","dependency":"MC-1, BD-1","output":"School outreach tool","cp":false,"phase":"B"},
+{"id":"CD-6","name":"Finalize sponsor materials","owner":"Elmarie and Scott","start":"Aug 3","finish":"Aug 14","dependency":"BD-1, EL-2","output":"Sponsor toolkit","cp":false,"phase":"B"},
+{"id":"BD-7","name":"Launch Tier 1 firm outreach","owner":"Gina","start":"Aug 6","finish":"Sep 23","dependency":"BD-1, CD-4, OP-4","output":"Active firm pipeline","cp":true,"phase":"B"},
+{"id":"BD-8","name":"Launch law school outreach","owner":"Gina","start":"Aug 6","finish":"Sep 23","dependency":"BD-1, CD-5, OP-4","output":"Active school pipeline","cp":true,"phase":"B"},
+{"id":"BD-9","name":"Launch sponsor outreach","owner":"Gina and Josh Poje","start":"Aug 6","finish":"Sep 23","dependency":"BD-1, CD-6","output":"Sponsor pipeline","cp":false,"phase":"B"},
+{"id":"BD-10","name":"Conduct virtual information sessions","owner":"Gina and Nishat","start":"Aug 13","finish":"Sep 17","dependency":"MC-6, CD-4, CD-5","output":"Qualified leads","cp":false,"phase":"B"},
+{"id":"LE-2","name":"Approve October learning architecture","owner":"Nishat and Gina","start":"Aug 3","finish":"Aug 19","dependency":"AM-6","output":"M9","cp":true,"phase":"B"},
+{"id":"LE-3","name":"Confirm October faculty roster","owner":"Nishat","start":"Aug 3","finish":"Aug 19","dependency":"LE-2","output":"M8","cp":true,"phase":"B"},
+{"id":"LE-4","name":"Issue faculty briefs and content deadlines","owner":"Nishat","start":"Aug 17","finish":"Aug 21","dependency":"LE-3","output":"Faculty mobilized","cp":true,"phase":"B"},
+{"id":"LE-5","name":"Develop learning outcomes and segment design","owner":"Nishat","start":"Aug 17","finish":"Aug 28","dependency":"LE-2, LE-3","output":"Curriculum framework","cp":true,"phase":"B"},
+{"id":"LE-6","name":"Develop experiential activities","owner":"Nishat and Faculty","start":"Aug 20","finish":"Sep 4","dependency":"LE-5","output":"Activity drafts","cp":true,"phase":"B"},
+{"id":"LE-7","name":"Develop AI experience plan","owner":"Nishat, Joe and AI Faculty","start":"Aug 17","finish":"Aug 28","dependency":"LE-2, VH-3","output":"AI design and fallback","cp":true,"phase":"B"},
+{"id":"LE-8","name":"Develop reflection framework","owner":"Nishat","start":"Aug 17","finish":"Aug 28","dependency":"LE-5","output":"Reflection sequence","cp":false,"phase":"B"},
+{"id":"LE-9","name":"Develop participant grouping strategy","owner":"Nishat, Gina and Joe","start":"Aug 20","finish":"Sep 9","dependency":"OP-5, LE-2","output":"Grouping method","cp":false,"phase":"B"},
+{"id":"VH-2","name":"Confirm venue capacity and space inventory","owner":"Laura","start":"Aug 3","finish":"Aug 10","dependency":"VH-1","output":"Space confirmed","cp":true,"phase":"B"},
+{"id":"VH-3","name":"Draft room, AV, Wi-Fi and power requirements","owner":"Laura and Joe","start":"Aug 10","finish":"Aug 21","dependency":"LE-2, VH-2","output":"Venue design requirements","cp":true,"phase":"B"},
+{"id":"VH-4","name":"Confirm preliminary catering approach","owner":"Laura and Joe","start":"Aug 17","finish":"Aug 28","dependency":"LE-2","output":"Catering framework","cp":false,"phase":"B"},
+{"id":"CD-7","name":"Establish October environmental design concept","owner":"Elmarie","start":"Aug 10","finish":"Aug 28","dependency":"LE-2, VH-2","output":"Visual concept","cp":false,"phase":"B"},
+{"id":"CD-8","name":"Create October asset inventory and production calendar","owner":"Scott","start":"Aug 10","finish":"Aug 26","dependency":"CD-7, LE-2","output":"Production tracker","cp":true,"phase":"B"},
+{"id":"FC-1","name":"Define Founding Cohort participation categories","owner":"Gina","start":"Aug 6","finish":"Aug 21","dependency":"MC-4, BD-7","output":"Participation model","cp":true,"phase":"B"},
+{"id":"FC-2","name":"Define cohort benefits and expectations","owner":"Gina and Nishat","start":"Aug 10","finish":"Aug 26","dependency":"FC-1","output":"M10","cp":true,"phase":"B"},
+{"id":"FC-3","name":"Draft Founding Charter principles","owner":"Gina and Nishat","start":"Aug 13","finish":"Aug 28","dependency":"FC-1","output":"Charter draft","cp":true,"phase":"B"},
+{"id":"FC-4","name":"Draft year-long learning roadmap","owner":"Gina and Nishat","start":"Aug 17","finish":"Sep 4","dependency":"FC-2, LE-2","output":"Quarterly roadmap","cp":true,"phase":"B"},
+{"id":"PM-4","name":"Conduct first formal pipeline and resource review","owner":"Gina and Joe","start":"Aug 17","finish":"Aug 19","dependency":"OP-5, BD-7, BD-8, BD-9","output":"Corrective actions","cp":false,"phase":"B"},
+{"id":"PM-5","name":"Conduct August integrated program review","owner":"Gina","start":"Aug 27","finish":"Sep 2","dependency":"LE-5, VH-3, CD-7, FC-2","output":"Integrated approval","cp":true,"phase":"B"},
+{"id":"MC-7","name":"Launch September conversion campaign","owner":"Josh and Cara","start":"Sep 1","finish":"Sep 23","dependency":"MC-6, PM-5","output":"Conversion activity","cp":true,"phase":"C"},
+{"id":"MC-8","name":"Publish faculty and agenda content","owner":"Josh and Cara","start":"Sep 2","finish":"Sep 9","dependency":"LE-3, OE-1","output":"Updated public information","cp":false,"phase":"C"},
+{"id":"MC-9","name":"Develop participant communication series","owner":"Cara","start":"Aug 24","finish":"Sep 9","dependency":"OP-4, VH-3, LE-2","output":"Approved sequence","cp":true,"phase":"C"},
+{"id":"MC-10","name":"Send participant preparation communication","owner":"Cara","start":"Sep 10","finish":"Sep 16","dependency":"MC-9, VH-6, LE-7","output":"Participant readiness","cp":true,"phase":"C"},
+{"id":"MC-11","name":"Send final participant logistics","owner":"Cara","start":"Sep 21","finish":"Sep 24","dependency":"OE-4, VH-8","output":"Final information","cp":true,"phase":"C"},
+{"id":"BD-11","name":"Conduct final direct-conversion outreach","owner":"Gina and Relationship Owners","start":"Sep 1","finish":"Sep 23","dependency":"PM-5, MC-7","output":"Commitments secured","cp":true,"phase":"C"},
+{"id":"BD-12","name":"Resolve organizational proposals and invoices","owner":"Gina and Joe","start":"Sep 1","finish":"Sep 23","dependency":"OP-4, BD-7, BD-8","output":"Confirmed participation","cp":true,"phase":"C"},
+{"id":"BD-13","name":"Monitor and correct cohort composition gaps","owner":"Gina","start":"Sep 1","finish":"Sep 18","dependency":"OP-5, LE-9","output":"Balanced participant mix","cp":true,"phase":"C"},
+{"id":"OE-1","name":"Approve full October agenda","owner":"Gina and Nishat","start":"Aug 24","finish":"Sep 2","dependency":"LE-5, LE-6","output":"M11","cp":true,"phase":"C"},
+{"id":"LE-10","name":"Draft facilitator guide","owner":"Nishat","start":"Aug 24","finish":"Sep 9","dependency":"OE-1, LE-6","output":"Complete draft","cp":true,"phase":"C"},
+{"id":"LE-11","name":"Draft participant guide","owner":"Nishat","start":"Aug 24","finish":"Sep 9","dependency":"OE-1, LE-8","output":"Complete draft","cp":true,"phase":"C"},
+{"id":"LE-12","name":"Finalize activities and reflection prompts","owner":"Nishat","start":"Sep 1","finish":"Sep 9","dependency":"LE-6, LE-8","output":"Final learning tools","cp":true,"phase":"C"},
+{"id":"FC-5","name":"Finalize Founding Charter language","owner":"Gina and Nishat","start":"Aug 24","finish":"Sep 2","dependency":"FC-3","output":"M12","cp":true,"phase":"C"},
+{"id":"FC-6","name":"Design Founding Charter","owner":"Elmarie and Scott","start":"Sep 2","finish":"Sep 16","dependency":"FC-5","output":"Production-ready Charter","cp":true,"phase":"C"},
+{"id":"FC-7","name":"Finalize cohort onboarding outline","owner":"Gina, Nishat and Cara","start":"Sep 1","finish":"Sep 11","dependency":"FC-2, FC-4","output":"Onboarding structure","cp":true,"phase":"C"},
+{"id":"FC-8","name":"Confirm first quarterly activity","owner":"Gina and Nishat","start":"Sep 1","finish":"Sep 16","dependency":"FC-4","output":"Date and concept","cp":true,"phase":"C"},
+{"id":"PC-1","name":"Select post-launch community platform/process","owner":"Gina and Joe","start":"Sep 1","finish":"Sep 16","dependency":"FC-2","output":"Community infrastructure","cp":true,"phase":"C"},
+{"id":"VH-5","name":"Confirm building access and security process","owner":"Laura","start":"Aug 24","finish":"Sep 4","dependency":"VH-2","output":"Access plan","cp":true,"phase":"C"},
+{"id":"VH-6","name":"Finalize room configuration","owner":"Laura, Joe and Nishat","start":"Aug 24","finish":"Sep 16","dependency":"VH-3, OE-1","output":"Final room plan","cp":true,"phase":"C"},
+{"id":"VH-7","name":"Finalize AV, Wi-Fi, power and AI support","owner":"Laura and Joe","start":"Aug 24","finish":"Sep 16","dependency":"VH-3, LE-7","output":"M14","cp":true,"phase":"C"},
+{"id":"VH-8","name":"Finalize catering and hospitality plan","owner":"Laura and Joe","start":"Sep 1","finish":"Sep 18","dependency":"VH-4, OE-1","output":"Catering locked","cp":true,"phase":"C"},
+{"id":"VH-9","name":"Conduct venue walkthrough","owner":"Laura","start":"Sep 10","finish":"Sep 16","dependency":"VH-6, VH-7","output":"Venue validation","cp":true,"phase":"C"},
+{"id":"CD-9","name":"Design participant guide","owner":"Elmarie and Scott","start":"Sep 7","finish":"Sep 16","dependency":"LE-11","output":"Final design","cp":true,"phase":"C"},
+{"id":"CD-10","name":"Design facilitator guide","owner":"Scott","start":"Sep 7","finish":"Sep 16","dependency":"LE-10","output":"Final design","cp":true,"phase":"C"},
+{"id":"CD-11","name":"Design signage and environmental graphics","owner":"Elmarie and Scott","start":"Sep 1","finish":"Sep 16","dependency":"CD-7, VH-6","output":"Final designs","cp":true,"phase":"C"},
+{"id":"CD-12","name":"Develop event slide system","owner":"Elmarie and Scott","start":"Sep 1","finish":"Sep 18","dependency":"OE-1, LE-12","output":"Final presentation system","cp":true,"phase":"C"},
+{"id":"CD-13","name":"Develop name-badge system","owner":"Scott and Joe","start":"Sep 3","finish":"Sep 18","dependency":"OP-5","output":"Badge design and data fields","cp":false,"phase":"C"},
+{"id":"OP-6","name":"Develop staffing plan","owner":"Joe and Gina","start":"Aug 31","finish":"Sep 18","dependency":"OE-1, VH-6","output":"Staffing assignments","cp":true,"phase":"C"},
+{"id":"OP-7","name":"Develop integrated run of show","owner":"Joe, Gina and Nishat","start":"Sep 1","finish":"Sep 21","dependency":"OE-1, VH-6, VH-8","output":"Final event schedule","cp":true,"phase":"C"},
+{"id":"OP-8","name":"Develop contingency and emergency plan","owner":"Joe and Laura","start":"Sep 1","finish":"Sep 21","dependency":"VH-5, VH-7, OP-7","output":"Response plan","cp":true,"phase":"C"},
+{"id":"LE-13","name":"Conduct integrated faculty rehearsal","owner":"Nishat","start":"Sep 10","finish":"Sep 16","dependency":"LE-10, LE-12, CD-12","output":"M13","cp":true,"phase":"C"},
+{"id":"PM-6","name":"Conduct mid-campaign performance review","owner":"Gina and Joe","start":"Sep 1","finish":"Sep 4","dependency":"MC-7, OP-5, BD-11","output":"Corrective plan","cp":true,"phase":"C"},
+{"id":"PM-7","name":"Conduct integrated readiness review","owner":"Gina and Joe","start":"Sep 14","finish":"Sep 18","dependency":"LE-13, VH-9, OP-7","output":"Readiness report","cp":true,"phase":"C"},
+{"id":"OE-2","name":"Lock final timed agenda","owner":"Gina, Nishat and Joe","start":"Sep 17","finish":"Sep 21","dependency":"LE-13, PM-7","output":"Agenda locked","cp":true,"phase":"D"},
+{"id":"CD-14","name":"Release guides, signs, badges and Charter to production","owner":"Scott","start":"Sep 21","finish":"Sep 21","dependency":"OE-2, CD-9, CD-10, CD-11, FC-6","output":"M15","cp":true,"phase":"D"},
+{"id":"OP-9","name":"Confirm final print quantities","owner":"Joe","start":"Sep 18","finish":"Sep 21","dependency":"OP-5, BD-12","output":"Production quantities","cp":true,"phase":"D"},
+{"id":"OP-10","name":"Complete final staffing assignments","owner":"Joe and Gina","start":"Sep 17","finish":"Sep 23","dependency":"OP-6","output":"Staff roster","cp":true,"phase":"D"},
+{"id":"OP-11","name":"Complete final run of show","owner":"Joe","start":"Sep 17","finish":"Sep 23","dependency":"OE-2, OP-7","output":"Final run of show","cp":true,"phase":"D"},
+{"id":"OP-12","name":"Prepare event contact sheet and command structure","owner":"Joe","start":"Sep 21","finish":"Sep 25","dependency":"OP-10, VH-5","output":"Command plan","cp":true,"phase":"D"},
+{"id":"OP-13","name":"Stabilize participant roster","owner":"Joe and Gina","start":"Sep 17","finish":"Sep 24","dependency":"BD-12, BD-13","output":"Final participant base","cp":true,"phase":"D"},
+{"id":"LE-14","name":"Complete final faculty briefing","owner":"Nishat","start":"Sep 21","finish":"Sep 25","dependency":"OE-2, OP-11","output":"Faculty ready","cp":true,"phase":"D"},
+{"id":"FC-9","name":"Deliver participant/cohort orientation","owner":"Gina and Nishat","start":"Sep 22","finish":"Sep 24","dependency":"FC-7, FC-8, PC-1","output":"M16","cp":false,"phase":"D"},
+{"id":"PC-2","name":"Configure community access and onboarding","owner":"Joe and Cara","start":"Sep 17","finish":"Sep 28","dependency":"PC-1, FC-7","output":"Community launch ready","cp":true,"phase":"D"},
+{"id":"EL-3","name":"Conduct first formal go/no-go review","owner":"Josh Poje and Gina","start":"Sep 21","finish":"Sep 23","dependency":"PM-7","output":"Readiness direction","cp":true,"phase":"D"},
+{"id":"VH-10","name":"Confirm final catering guarantee","owner":"Laura and Joe","start":"Sep 21","finish":"Sep 25","dependency":"OP-13, VH-8","output":"Final food count","cp":true,"phase":"D"},
+{"id":"VH-11","name":"Confirm guest-list and security deadline","owner":"Laura and Joe","start":"Sep 21","finish":"Sep 25","dependency":"OP-13, VH-5","output":"Guest process ready","cp":true,"phase":"D"},
+{"id":"MC-12","name":"Finalize event-day and crisis communications","owner":"Josh and Cara","start":"Sep 17","finish":"Sep 25","dependency":"OP-8, MC-11","output":"Communication contingencies","cp":false,"phase":"D"},
+{"id":"MC-13","name":"Finalize post-event thank-you, survey and onboarding","owner":"Cara","start":"Sep 17","finish":"Sep 28","dependency":"FC-7, PC-2","output":"Follow-up package","cp":true,"phase":"D"},
+{"id":"PM-8","name":"Activate daily command-center stand-ups","owner":"Gina and Joe","start":"Sep 24","finish":"Oct 1","dependency":"OP-11","output":"Daily issue resolution","cp":true,"phase":"D"},
+{"id":"OP-14","name":"Issue final roster and group assignments","owner":"Joe and Nishat","start":"Sep 24","finish":"Sep 28","dependency":"OP-13, LE-9","output":"Final assignments","cp":true,"phase":"D"},
+{"id":"VH-12","name":"Submit final guest list","owner":"Joe through Laura","start":"Sep 28","finish":"Sep 28","dependency":"OP-14","output":"Building access list","cp":true,"phase":"D"},
+{"id":"CD-15","name":"Confirm production delivery and inventory","owner":"Scott and Joe","start":"Sep 24","finish":"Sep 29","dependency":"CD-14","output":"Materials received","cp":true,"phase":"D"},
+{"id":"VH-13","name":"Conduct final venue and AV test","owner":"Laura and Joe","start":"Sep 28","finish":"Sep 30","dependency":"VH-7, VH-9","output":"Venue green","cp":true,"phase":"D"},
+{"id":"OP-15","name":"Conduct staff and volunteer briefing","owner":"Joe and Gina","start":"Sep 28","finish":"Sep 30","dependency":"OP-10, OP-11","output":"Staff ready","cp":true,"phase":"D"},
+{"id":"LE-15","name":"Issue final faculty run of show","owner":"Nishat and Joe","start":"Sep 28","finish":"Sep 30","dependency":"LE-14, OP-11","output":"Faculty final instructions","cp":true,"phase":"D"},
+{"id":"MC-14","name":"Issue day-before participant reminder","owner":"Cara","start":"Sep 30","finish":"Sep 30","dependency":"MC-11, VH-12","output":"Final reminder","cp":true,"phase":"D"},
+{"id":"EL-4","name":"Conduct final go/no-go decision","owner":"Josh Poje and Gina","start":"Sep 28","finish":"Sep 28","dependency":"EL-3, PM-8, VH-13, CD-15","output":"M17","cp":true,"phase":"D"},
+{"id":"OE-3","name":"Activate event command center","owner":"Gina and Joe","start":"Oct 1","finish":"Oct 1","dependency":"PM-8, OP-12","output":"Command active","cp":true,"phase":"E"},
+{"id":"OE-4","name":"Complete participant arrival and registration","owner":"Joe and Laura","start":"Oct 1","finish":"Oct 1","dependency":"VH-12, OP-14","output":"Participants admitted","cp":true,"phase":"E"},
+{"id":"OE-5","name":"Deliver immersive learning experience","owner":"Nishat and Faculty","start":"Oct 1","finish":"Oct 1","dependency":"LE-15, OE-2","output":"Core program delivered","cp":true,"phase":"E"},
+{"id":"OE-6","name":"Deliver Founding Charter experience","owner":"Gina and Nishat","start":"Oct 1","finish":"Oct 1","dependency":"FC-6, FC-9","output":"Charter launched","cp":true,"phase":"E"},
+{"id":"OE-7","name":"Present post-event cohort journey","owner":"Gina and Nishat","start":"Oct 1","finish":"Oct 1","dependency":"FC-8, PC-2","output":"Next step understood","cp":true,"phase":"E"},
+{"id":"OE-8","name":"Fulfill host and sponsor recognition","owner":"Gina and Cara","start":"Oct 1","finish":"Oct 1","dependency":"VH-1, sponsor agreements","output":"Commitments fulfilled","cp":false,"phase":"E"},
+{"id":"OE-9","name":"Capture attendance and participant feedback","owner":"Joe","start":"Oct 1","finish":"Oct 1","dependency":"OP-14","output":"Attendance record","cp":true,"phase":"E"},
+{"id":"OE-10","name":"Complete immediate event debrief","owner":"Gina and Joe","start":"Oct 1","finish":"Oct 2","dependency":"OE-3-OE-9","output":"Immediate actions","cp":false,"phase":"E"},
+{"id":"MC-15","name":"Send participant thank-you and survey","owner":"Cara","start":"Oct 2","finish":"Oct 3","dependency":"MC-13, OE-9","output":"M19 begins","cp":true,"phase":"E"},
+{"id":"PC-3","name":"Launch community access","owner":"Joe and Cara","start":"Oct 2","finish":"Oct 5","dependency":"PC-2, OE-7","output":"Community active","cp":true,"phase":"E"},
+{"id":"FC-10","name":"Send Founding Cohort onboarding package","owner":"Cara, Gina and Nishat","start":"Oct 2","finish":"Oct 5","dependency":"FC-7, OE-7","output":"Onboarding delivered","cp":true,"phase":"E"},
+{"id":"FC-11","name":"Announce first quarterly experience","owner":"Gina and Nishat","start":"Oct 2","finish":"Oct 5","dependency":"FC-8","output":"Next event confirmed","cp":true,"phase":"E"},
+{"id":"OP-16","name":"Reconcile attendance and participant records","owner":"Joe","start":"Oct 2","finish":"Oct 6","dependency":"OE-9","output":"Final attendance","cp":false,"phase":"E"},
+{"id":"BD-14","name":"Conduct partner, sponsor and organization follow-up","owner":"Gina","start":"Oct 2","finish":"Oct 9","dependency":"OE-8, OP-16","output":"Relationships continued","cp":false,"phase":"E"},
+{"id":"LE-16","name":"Conduct faculty debrief","owner":"Nishat","start":"Oct 2","finish":"Oct 7","dependency":"OE-5","output":"Learning lessons","cp":false,"phase":"E"},
+{"id":"OP-17","name":"Conduct operational and venue debrief","owner":"Joe and Laura","start":"Oct 2","finish":"Oct 7","dependency":"OE-10","output":"Operational lessons","cp":false,"phase":"E"},
+{"id":"PM-9","name":"Complete lessons-learned workshop","owner":"Gina","start":"Oct 8","finish":"Oct 13","dependency":"LE-16, OP-17","output":"Consolidated lessons","cp":true,"phase":"E"},
+{"id":"OP-18","name":"Reconcile budget, invoices and vendors","owner":"Joe and Gina","start":"Oct 2","finish":"Oct 16","dependency":"OE-10","output":"Financial closeout","cp":true,"phase":"E"},
+{"id":"MC-16","name":"Publish approved recap and participant stories","owner":"Josh and Cara","start":"Oct 8","finish":"Oct 23","dependency":"Consent, PM-9","output":"Public recap","cp":false,"phase":"E"},
+{"id":"FC-12","name":"Confirm quarterly learning calendar","owner":"Gina and Nishat","start":"Oct 5","finish":"Oct 16","dependency":"FC-11, participant feedback","output":"M21","cp":true,"phase":"E"},
+{"id":"PC-4","name":"Establish ongoing community communications calendar","owner":"Cara and Josh","start":"Oct 5","finish":"Oct 16","dependency":"FC-12","output":"Community cadence","cp":true,"phase":"E"},
+{"id":"PM-10","name":"Prepare post-launch executive report","owner":"Gina and Joe","start":"Oct 8","finish":"Oct 16","dependency":"PM-9, OP-18","output":"M20","cp":true,"phase":"E"},
+{"id":"PM-11","name":"Transition governance to cohort operations","owner":"Gina","start":"Oct 12","finish":"Oct 16","dependency":"PM-10, FC-12, PC-4","output":"Launch phase closed","cp":true,"phase":"E"},
+{"id":"CD-16","name":"Archive final creative and production assets","owner":"Scott","start":"Oct 5","finish":"Oct 16","dependency":"OE-10","output":"Asset archive","cp":false,"phase":"E"},
+{"id":"PC-5","name":"Begin first community reflection/activity","owner":"Nishat and Cara","start":"Oct 19","finish":"Oct 30","dependency":"PC-3, FC-10","output":"Ongoing engagement","cp":false,"phase":"E"},
+{"id":"EL-5","name":"Approve ongoing staffing and budget","owner":"Josh Poje","start":"Oct 12","finish":"Oct 16","dependency":"PM-10","output":"Continued authority","cp":true,"phase":"E"}
+]
+</script>
+
+<script type="application/json" id="milestones-data">
+[
+{"id":"M1","name":"PMO governance activated","date":"Jul 17","owner":"Gina","readiness":"Roles, authority, meetings, trackers established"},
+{"id":"M2","name":"PDC activation","date":"Jul 25","owner":"Gina","readiness":"Messaging, collateral, lead capture ready"},
+{"id":"M3","name":"ACLEA activation","date":"Jul 26","owner":"Gina","readiness":"Messaging, collateral, lead capture ready"},
+{"id":"M4","name":"Annual Meeting materials locked","date":"Jul 27","owner":"Gina","readiness":"Slides, signage, forms, staffing approved"},
+{"id":"M5","name":"ABA Annual Meeting public launch","date":"Jul 31","owner":"Gina and Nishat","readiness":"Program, speakers, AV, CTA, follow-up ready"},
+{"id":"M6","name":"Founding Cohort campaign launch","date":"Aug 6","owner":"Josh and Cara","readiness":"Website, messages, materials, forms ready"},
+{"id":"M7","name":"Registration and CRM operational","date":"Aug 10","owner":"Joe and Gina","readiness":"Pricing, packages, payment, lead routing tested"},
+{"id":"M8","name":"October faculty confirmed","date":"Aug 19","owner":"Nishat","readiness":"Faculty roles and content deadlines documented"},
+{"id":"M9","name":"October learning architecture approved","date":"Aug 19","owner":"Nishat and Gina","readiness":"Agenda framework, outcomes, activities defined"},
+{"id":"M10","name":"Founding Cohort model approved","date":"Aug 26","owner":"Gina and Nishat","readiness":"Benefits, expectations, roadmap, recognition defined"},
+{"id":"M11","name":"Full October agenda approved","date":"Sep 2","owner":"Gina and Nishat","readiness":"Content, timing, faculty and transitions aligned"},
+{"id":"M12","name":"Founding Charter approved","date":"Sep 2","owner":"Gina, Nishat and Josh Poje","readiness":"Language and participation process approved"},
+{"id":"M13","name":"Integrated rehearsal completed","date":"Sep 16","owner":"Nishat","readiness":"Timing, faculty, transitions and contingency tested"},
+{"id":"M14","name":"Venue and technology validated","date":"Sep 16","owner":"Laura and Joe","readiness":"Rooms, access, AV, Wi-Fi, power and AI access confirmed"},
+{"id":"M15","name":"Production lock","date":"Sep 21","owner":"Gina and functional leads","readiness":"Copy, quantities, files and approvals final"},
+{"id":"M16","name":"Participant orientation","date":"Sep 23","owner":"Gina and Nishat","readiness":"Cohort information, expectations and logistics ready"},
+{"id":"M17","name":"Event go/no-go decision","date":"Sep 28","owner":"Josh Poje and Gina","readiness":"All critical readiness categories green or mitigated"},
+{"id":"M18","name":"October 1 immersive experience","date":"Oct 1","owner":"Gina and Nishat","readiness":"Full event delivery"},
+{"id":"M19","name":"Community onboarding launched","date":"Oct 3","owner":"Gina, Nishat and Cara","readiness":"Platform, communications, calendar and resources ready"},
+{"id":"M20","name":"Launch closeout completed","date":"Oct 16","owner":"Gina and Joe","readiness":"Evaluation, budget, lessons and ownership transition complete"},
+{"id":"M21","name":"First quarterly cohort experience scheduled","date":"Oct 16","owner":"Gina and Nishat","readiness":"Theme, date, faculty and format identified"}
+]
+</script>
+
+<script>
+(function(){
+"use strict";
+const PRISTINE = '<!doctype html>\n' + document.documentElement.outerHTML;
+
+// ---- access gate ----
+// Password is stored only as a SHA-256 hash; the plaintext never appears in this file.
+const PASS_HASH = '38586d95ff7eb838ea520c75154cde4ebf1cb965dc2d10ea3156c5be8500995a';
+function sha256(ascii){
+  function rightRotate(v,a){ return (v>>>a)|(v<<(32-a)); }
+  var mathPow=Math.pow, maxWord=mathPow(2,32), result='', words=[], asciiBitLength=ascii.length*8;
+  var hash=[], k=[], primeCounter=0, isComposite={}, i, j;
+  for(var candidate=2; primeCounter<64; candidate++){
+    if(!isComposite[candidate]){
+      for(i=0; i<313; i+=candidate){ isComposite[i]=candidate; }
+      hash[primeCounter]=(mathPow(candidate,.5)*maxWord)|0;
+      k[primeCounter++]=(mathPow(candidate,1/3)*maxWord)|0;
+    }
+  }
+  ascii+='\x80';
+  while(ascii.length%64-56) ascii+='\x00';
+  for(i=0;i<ascii.length;i++){
+    j=ascii.charCodeAt(i);
+    if(j>>8) return '';
+    words[i>>2]|=j<<((3-i)%4)*8;
+  }
+  words[words.length]=(asciiBitLength/maxWord)|0;
+  words[words.length]=asciiBitLength;
+  for(j=0;j<words.length;){
+    var w=words.slice(j,j+=16), oldHash=hash;
+    hash=hash.slice(0,8);
+    for(i=0;i<64;i++){
+      var w15=w[i-15], w2=w[i-2];
+      var a=hash[0], e=hash[4];
+      var temp1=hash[7]
+        +(rightRotate(e,6)^rightRotate(e,11)^rightRotate(e,25))
+        +((e&hash[5])^((~e)&hash[6]))
+        +k[i]
+        +(w[i]=(i<16)?w[i]:(w[i-16]+(rightRotate(w15,7)^rightRotate(w15,18)^(w15>>>3))+w[i-7]+(rightRotate(w2,17)^rightRotate(w2,19)^(w2>>>10)))|0);
+      var temp2=(rightRotate(a,2)^rightRotate(a,13)^rightRotate(a,22))+((a&hash[1])^(a&hash[2])^(hash[1]&hash[2]));
+      hash=[(temp1+temp2)|0].concat(hash);
+      hash[4]=(hash[4]+temp1)|0;
+    }
+    for(i=0;i<8;i++){ hash[i]=(hash[i]+oldHash[i])|0; }
+  }
+  for(i=0;i<8;i++){
+    for(j=3;j+1;j--){
+      var b=(hash[i]>>(j*8))&255;
+      result+=((b<16)?0:'')+b.toString(16);
+    }
+  }
+  return result;
+}
+(function(){
+  const input=document.getElementById('gateInput');
+  const btn=document.getElementById('gateBtn');
+  const err=document.getElementById('gateErr');
+  function unlock(remember){
+    document.body.classList.add('unlocked');
+    if(remember){ try{ sessionStorage.setItem('abaTedGantt.auth','1'); }catch(e){} }
+  }
+  let authed=false;
+  try{ authed = sessionStorage.getItem('abaTedGantt.auth')==='1'; }catch(e){}
+  if(authed){ unlock(false); }
+  else { setTimeout(()=>{ try{ input.focus(); }catch(e){} }, 50); }
+  function attempt(){
+    if(sha256(input.value)===PASS_HASH){ err.textContent=''; unlock(true); }
+    else { err.textContent='Incorrect password — try again.'; input.value=''; input.focus(); }
+  }
+  btn.addEventListener('click', attempt);
+  input.addEventListener('keydown', e=>{ if(e.key==='Enter') attempt(); });
+})();
+const tasksRaw = document.getElementById('tasks-data').textContent;
+const TASKS = JSON.parse(tasksRaw);
+const MILESTONES = JSON.parse(document.getElementById('milestones-data').textContent);
+const WORKSTREAMS = [
+  {code:'EL',name:'Executive Leadership',lead:'Josh Poje'},
+  {code:'PM',name:'Program Management',lead:'Gina Roers-Liemandt'},
+  {code:'LE',name:'Learning Experience',lead:'Nishat Ruiter'},
+  {code:'MC',name:'Marketing & Communications',lead:'Josh Eaton and Cara DiPasquale'},
+  {code:'OP',name:'Operations',lead:'Joe Besharse and Gina Roers-Liemandt'},
+  {code:'CD',name:'Creative & Design',lead:'Elmarie Jara and Scott Henson'},
+  {code:'VH',name:'Venue & Host Partner',lead:'Laura Zavala'},
+  {code:'BD',name:'Business Development',lead:'Gina Roers-Liemandt'},
+  {code:'AM',name:'Annual Meeting Activation',lead:'Gina Roers-Liemandt'},
+  {code:'OE',name:'October Immersive Experience',lead:'Gina Roers-Liemandt and Nishat Ruiter'},
+  {code:'FC',name:'Founding Cohort',lead:'Gina Roers-Liemandt and Nishat Ruiter'},
+  {code:'PC',name:'Post-Launch Community',lead:'Gina Roers-Liemandt and Nishat Ruiter'}
+];
+const PHASES = {
+  A:{label:'Mobilization, PDC, ACLEA and Annual Meeting'},
+  B:{label:'August campaign, recruitment and program development'},
+  C:{label:'September conversion, production and readiness'},
+  D:{label:'Production lock, orientation and final readiness'},
+  E:{label:'October 1 delivery and post-launch transition'}
+};
+const STATUS_LABELS = {pending:'Pending', complete:'Complete', flagged:'Flagged'};
+const CP_PRIORITIES = ["Governance and decision authority","Approved initiative messaging","Annual Meeting session, speakers and materials","Lead-capture and follow-up process","Participation packages and registration","Website and Founding Cohort campaign","Learning architecture and faculty confirmation","Venue capacity, room design and technology feasibility","Full October agenda","Participant and facilitator guides","Founding Charter and cohort roadmap","Integrated rehearsal","Final production release","Final roster and guest list","Event run of show and command structure","Final venue and AV test","Go/no-go approval","October 1 delivery","Community onboarding","Post-launch governance transition"];
+const GATES = [
+  {name:'Annual Meeting Gate',date:'July 27',items:['Session content','Speakers','Deck','Collateral','Interest form','Staffing','Run of show','Follow-up package']},
+  {name:'Campaign Gate',date:'August 6-10',items:['Website','Participation model','Pricing','Registration','Campaign copy','Prospect materials','CRM and lead routing']},
+  {name:'Learning and Cohort Gate',date:'September 2',items:['Full agenda','Faculty roles','Learning activities','Charter language','Cohort benefits','Annual learning roadmap']},
+  {name:'Production Gate',date:'September 21',items:['Final agenda','Guides','Signage','Badges','Charter','Quantities','Host and sponsor recognition','Budget authorization']},
+  {name:'Final Readiness Gate',date:'September 28',items:['Program','Faculty','Participant roster','Venue','AV and Wi-Fi','Materials','Staffing','Catering','Communications','Accessibility','Security','Onboarding','Budget','Contingency plan']}
+];
+const CHAINS = [
+  {title:'Governance to launch',steps:['Executive sponsorship','PMO activation','Workstream ownership','Approvals and decision authority','Integrated schedule','Readiness reviews','Launch authorization']},
+  {title:'Messaging to recruitment',steps:['Message architecture','Website and campaign materials','Prospect outreach','Registration and interest','Pipeline','Participant roster','Cohort composition']},
+  {title:'Learning to production',steps:['Learning architecture','Faculty confirmation','Curriculum and activities','Participant and facilitator content','Rehearsal','Final revisions','Production release']},
+  {title:'Venue to participant communications',steps:['Venue capacity and rules','Room and access plans','AV and technology validation','Logistics language','Participant communications','Final guest list','Participant arrival']},
+  {title:'Registration to event operations',steps:['Registration system','Participant data','Organizational seats','Dietary and accessibility needs','Badges and groups','Catering count','Guest list','Check-in']},
+  {title:'Founding Cohort to post-launch community',steps:['Cohort model','Charter','Annual roadmap','Orientation','October 1 launch','Onboarding','First quarterly experience','Year-long community']}
+];
+const OWNERS = [
+  ['Josh Poje','Strategic approvals, budget authority, executive decisions, go/no-go'],
+  ['Gina Roers-Liemandt','Integrated execution, program strategy, business development, launch and transition'],
+  ['Nishat Ruiter','Learning architecture, faculty, curriculum, facilitation and cohort learning'],
+  ['Josh Eaton','Marketing strategy, campaign performance and public visibility'],
+  ['Cara DiPasquale','Communications execution, participant communications and follow-up'],
+  ['Joe Besharse','Schedule controls, registration, CRM, logistics, staffing and operational readiness'],
+  ['Elmarie Jara','Creative direction, event design and visual quality'],
+  ['Scott Henson','Asset production, printing, presentation files and archive'],
+  ['Laura Zavala','Venue, security, access, AV, catering and host coordination'],
+  ['Relationship Owners','Prospect cultivation, follow-up and conversion'],
+  ['Faculty','Content development, rehearsal and delivery'],
+  ['Event Staff and Volunteers','Registration, participant support and event execution']
+];
+const REF_LINES = [
+  {date:'Jul 31, 2026',code:'AM',full:'Jul 31 — ABA Annual Meeting public launch'},
+  {date:'Sep 21, 2026',code:'PL',full:'Sep 21 — Production lock'},
+  {date:'Sep 28, 2026',code:'GO',full:'Sep 28 — Final go/no-go decision'},
+  {date:'Oct 1, 2026',code:'L1',full:'Oct 1 — Immersive experience launch',prominent:true}
+];
+
+// ---- dates ----
+const YEAR = 2026;
+function parseD(str){ return new Date(str + ', ' + YEAR); }
+function fmtDate(str){ return parseD(str).toLocaleDateString('en-US',{month:'short',day:'numeric'}); }
+function toISO(str){ const d=parseD(str); return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0'); }
+function fromISO(iso){ const d=new Date(iso+'T00:00:00'); return d.toLocaleDateString('en-US',{month:'short',day:'numeric'}); }
+
+// ---- editable data layer: baseline, overrides, persistence ----
+function hashStr(s){ let h=5381; for(let i=0;i<s.length;i++){ h=((h<<5)+h+s.charCodeAt(i))|0; } return (h>>>0).toString(36); }
+const DOC_KEY = 'abaTedGantt.' + hashStr(tasksRaw);
+
+TASKS.forEach(t=>{ if(!t.status) t.status='pending'; t.ws = t.id.split('-')[0]; });
+const BASELINE = {};
+TASKS.forEach(t=>{ BASELINE[t.id] = {start:t.start, finish:t.finish, owner:t.owner, status:t.status}; });
+
+let store = {overrides:{}};
+try{ const raw = localStorage.getItem(DOC_KEY); if(raw){ const p = JSON.parse(raw); if(p && p.overrides) store = p; } }catch(e){}
+Object.keys(store.overrides).forEach(id=>{ const t = TASKS.find(x=>x.id===id); if(t) Object.assign(t, store.overrides[id]); });
+
+function persist(){ try{ localStorage.setItem(DOC_KEY, JSON.stringify(store)); }catch(e){} }
+function setOverride(id, patch){
+  const t = TASKS.find(x=>x.id===id); if(!t) return;
+  Object.assign(t, patch);
+  const b = BASELINE[id], o = {};
+  ['start','finish','owner','status'].forEach(k=>{ if(t[k]!==b[k]) o[k]=t[k]; });
+  if(Object.keys(o).length) store.overrides[id]=o; else delete store.overrides[id];
+  persist();
+}
+function isEdited(id){ return !!store.overrides[id]; }
+function editedCount(){ return Object.keys(store.overrides).length; }
+
+// ---- layout ----
+const DAY_W=13, BAR_H=15, BAR_GAP=6, ROW_PAD=9, MS_ROW_H=22, MS_MIN_GAP_PX=20;
+const PLAN_START = new Date('Jul 16, 2026'), PLAN_END = new Date('Oct 31, 2026');
+let ANCHOR, TOTAL_DAYS, timelineW, laneMap;
+function computeLayout(){
+  let minD = PLAN_START.getTime(), maxD = PLAN_END.getTime();
+  TASKS.forEach(t=>{ minD=Math.min(minD, parseD(t.start).getTime()); maxD=Math.max(maxD, parseD(t.finish).getTime()); });
+  ANCHOR = new Date(minD);
+  TOTAL_DAYS = Math.round((maxD-minD)/86400000) + 2;
+  timelineW = TOTAL_DAYS * DAY_W;
+  const off = s => Math.round((parseD(s)-ANCHOR)/86400000);
+  TASKS.forEach(t=>{ t.s=off(t.start); t.f=Math.max(t.s, off(t.finish)); t.dur=t.f-t.s+1; });
+  MILESTONES.forEach(m=>{ m.off = off(m.date); });
+  laneMap = {};
+  WORKSTREAMS.forEach(w=>{
+    const list = TASKS.filter(t=>t.ws===w.code).sort((a,b)=>a.s-b.s);
+    const lanes = [];
+    list.forEach(t=>{
+      let placed=false;
+      for(let i=0;i<lanes.length;i++){ if(lanes[i]<=t.s){ t.lane=i; lanes[i]=t.f; placed=true; break; } }
+      if(!placed){ t.lane=lanes.length; lanes.push(t.f); }
+    });
+    laneMap[w.code] = Math.max(1, lanes.length);
+  });
+}
+function rowHeight(code){ const n=laneMap[code]; return ROW_PAD*2 + n*BAR_H + (n-1)*BAR_GAP; }
+
+// ---- tooltip ----
+const tt = document.getElementById('tooltip');
+function showTT(html, x, y){ tt.innerHTML = html; tt.style.display='block'; positionTT(x,y); }
+function positionTT(x,y){
+  const pad=14; let left=x+pad, top=y+pad;
+  const rect = tt.getBoundingClientRect();
+  if(left+rect.width > window.innerWidth-10) left = x - rect.width - pad;
+  if(top+rect.height > window.innerHeight-10) top = y - rect.height - pad;
+  tt.style.left=left+'px'; tt.style.top=top+'px';
+}
+function hideTT(){ tt.style.display='none'; }
+
+// ---- state ----
+let selectedTaskId=null, selectedMsId=null, selectedWsCode=null;
+let cpOnly=false, flaggedOnly=false, hideDone=false;
+const activePhases = new Set(Object.keys(PHASES));
+const panel = document.getElementById('detailPanel');
+const searchInput = document.getElementById('searchInput');
+
+// ---- stats ----
+function renderStats(){
+  const now = new Date();
+  const oct1 = new Date('Oct 1, 2026');
+  let cv, cl;
+  if(now <= oct1){ cv=Math.max(0,Math.round((oct1-now)/86400000)); cl='days to Oct 1 launch'; }
+  else if(now <= new Date('Oct 31, 2026')){ cv=Math.round((now-oct1)/86400000); cl='days since launch'; }
+  else { cv='—'; cl='launch phase complete'; }
+  const done = TASKS.filter(t=>t.status==='complete').length;
+  const flag = TASKS.filter(t=>t.status==='flagged').length;
+  document.getElementById('statRow').innerHTML = [
+    [WORKSTREAMS.length,'workstreams',''],
+    [TASKS.length,'deliverables',''],
+    [TASKS.filter(t=>t.cp).length,'critical-path items',''],
+    [done,'complete', done?'ok':''],
+    [flag,'flagged', flag?'flag':''],
+    [cv,cl,'']
+  ].map(s=>`<div class="stat"><div class="n mono${s[2]?' '+s[2]:''}">${s[0]}</div><div class="l">${s[1]}</div></div>`).join('');
+}
+
+// ---- toolbar edit state ----
+function renderToolbar(){
+  const n = editedCount();
+  const badge = document.getElementById('editsBadge');
+  const resetE = document.getElementById('resetEditsBtn');
+  badge.hidden = n===0;
+  resetE.hidden = n===0;
+  if(n) badge.textContent = n + ' edit' + (n===1?'':'s');
+}
+
+// ---- chart ----
+function renderChart(){
+  computeLayout();
+  const scroller = document.querySelector('.gantt-scroll');
+  const keepScroll = scroller ? scroller.scrollLeft : 0;
+
+  const rulerTrack = document.getElementById('rulerTrack');
+  rulerTrack.style.width = timelineW+'px';
+  let rh='';
+  for(let d=0; d<=TOTAL_DAYS; d+=7){
+    const dt = new Date(ANCHOR.getTime()+d*86400000);
+    rh += `<div class="week-tick" style="left:${d*DAY_W}px">${dt.toLocaleDateString('en-US',{month:'short',day:'numeric'})}</div>`;
+  }
+  rulerTrack.innerHTML = rh;
+
+  const gridOverlay = document.getElementById('gridOverlay');
+  gridOverlay.style.width = timelineW+'px';
+  let oh='';
+  for(let d=0; d<=TOTAL_DAYS; d+=7){ oh += `<div class="gline" style="left:${d*DAY_W}px"></div>`; }
+  REF_LINES.forEach(r=>{
+    const off = Math.round((new Date(r.date)-ANCHOR)/86400000);
+    if(off<0 || off>TOTAL_DAYS) return;
+    oh += `<div class="gline strong" style="left:${off*DAY_W}px"></div>`;
+    oh += `<div class="gline-flag${r.prominent?' prominent':''}" data-full="${r.full}" style="left:${off*DAY_W}px">${r.code}</div>`;
+  });
+  const now = new Date();
+  const todayOff = Math.round((now-ANCHOR)/86400000);
+  if(todayOff>=0 && todayOff<=TOTAL_DAYS){
+    oh += `<div class="gline today" style="left:${todayOff*DAY_W}px"></div>`;
+    oh += `<div class="gline-flag today-lbl" data-full="Today's date" style="left:${todayOff*DAY_W}px">TODAY</div>`;
+  }
+  gridOverlay.innerHTML = oh;
+
+  const msSorted = [...MILESTONES].sort((a,b)=>a.off-b.off);
+  const msRowLast = [];
+  msSorted.forEach(m=>{
+    let placed=false;
+    for(let r=0;r<msRowLast.length;r++){
+      if((m.off - msRowLast[r]) * DAY_W >= MS_MIN_GAP_PX){ m.row=r; msRowLast[r]=m.off; placed=true; break; }
+    }
+    if(!placed){ m.row=msRowLast.length; msRowLast.push(m.off); }
+  });
+  const msRowsHeight = Math.max(1, msRowLast.length) * MS_ROW_H + 16;
+  document.querySelector('.milestone-row').style.minHeight = msRowsHeight+'px';
+  const msTrack = document.getElementById('msTrack');
+  msTrack.style.width = timelineW+'px';
+  msTrack.style.height = msRowsHeight+'px';
+  msTrack.innerHTML = MILESTONES.map(m=>{
+    const top = 8 + m.row*MS_ROW_H + MS_ROW_H/2;
+    return `<div class="ms-diamond" data-ms="${m.id}" style="left:${m.off*DAY_W}px;top:${top}px"></div>`;
+  }).join('');
+
+  const wsRows = document.getElementById('wsRows');
+  wsRows.innerHTML = WORKSTREAMS.map(w=>{
+    const h = rowHeight(w.code);
+    const list = TASKS.filter(t=>t.ws===w.code);
+    const bars = list.map(t=>{
+      const left = t.s*DAY_W;
+      const width = Math.max(4, t.dur*DAY_W - 2);
+      const top = ROW_PAD + t.lane*(BAR_H+BAR_GAP);
+      const check = (t.status==='complete' && width>=20) ? ' show-check' : '';
+      return `<div class="task-bar${t.cp?' cp':''} st-${t.status}${check}" data-task="${t.id}" style="left:${left}px;width:${width}px;top:${top}px;height:${BAR_H}px;background:var(--phase-${t.phase.toLowerCase()});"></div>`;
+    }).join('');
+    return `<div class="ws-row" data-code="${w.code}" style="height:${h}px">
+      <div class="ws-label" data-code="${w.code}">
+        <span class="ws-code">${w.code}</span>
+        <div class="ws-name">${w.name}</div>
+        <div class="ws-lead">${w.lead}</div>
+        <div class="ws-count">${list.length} deliverables</div>
+      </div>
+      <div class="ws-track" style="width:${timelineW}px;height:${h}px">${bars}</div>
+    </div>`;
+  }).join('');
+
+  bindChartEvents();
+  applyFilters();
+  if(selectedTaskId){ const el=document.querySelector(`[data-task="${selectedTaskId}"]`); if(el) el.classList.add('selected'); }
+  if(selectedMsId){ const el=document.querySelector(`[data-ms="${selectedMsId}"]`); if(el) el.classList.add('selected'); }
+  if(scroller) scroller.scrollLeft = keepScroll;
+}
+
+function bindChartEvents(){
+  document.querySelectorAll('.task-bar').forEach(el=>{
+    const t = TASKS.find(x=>x.id===el.dataset.task);
+    el.addEventListener('mouseenter', e=>{
+      const st = t.status!=='pending' ? ' &middot; '+STATUS_LABELS[t.status] : '';
+      showTT(`<b>${t.id}</b>${t.name}<div class="ttd">${fmtDate(t.start)}-${fmtDate(t.finish)} &middot; ${t.owner}${t.cp?' &middot; Critical path':''}${st}</div>`, e.clientX, e.clientY);
+    });
+    el.addEventListener('mousemove', e=> positionTT(e.clientX, e.clientY));
+    el.addEventListener('mouseleave', hideTT);
+    el.addEventListener('click', ()=> showTaskDetail(t));
+  });
+  document.querySelectorAll('.ms-diamond').forEach(el=>{
+    const m = MILESTONES.find(x=>x.id===el.dataset.ms);
+    el.addEventListener('mouseenter', e=>{
+      showTT(`<b>${m.id}</b>${m.name}<div class="ttd">${fmtDate(m.date)}, ${YEAR} &middot; ${m.owner}</div>`, e.clientX, e.clientY);
+    });
+    el.addEventListener('mousemove', e=> positionTT(e.clientX, e.clientY));
+    el.addEventListener('mouseleave', hideTT);
+    el.addEventListener('click', ()=> showMsDetail(m.id));
+  });
+  document.querySelectorAll('.ws-label').forEach(el=>{
+    el.addEventListener('click', ()=> showWsDetail(el.dataset.code));
+  });
+  document.querySelectorAll('.gline-flag').forEach(el=>{
+    el.addEventListener('mouseenter', e=> showTT(el.dataset.full, e.clientX, e.clientY));
+    el.addEventListener('mousemove', e=> positionTT(e.clientX, e.clientY));
+    el.addEventListener('mouseleave', hideTT);
+  });
+}
+
+// ---- filters ----
+function applyFilters(){
+  const q = searchInput.value.trim().toLowerCase();
+  document.querySelectorAll('.task-bar').forEach(el=>{
+    const t = TASKS.find(x=>x.id===el.dataset.task);
+    let ok = true;
+    if(q && !(t.id.toLowerCase().includes(q) || t.name.toLowerCase().includes(q) || t.owner.toLowerCase().includes(q))) ok=false;
+    if(cpOnly && !t.cp) ok=false;
+    if(flaggedOnly && t.status!=='flagged') ok=false;
+    if(hideDone && t.status==='complete') ok=false;
+    if(!activePhases.has(t.phase)) ok=false;
+    el.classList.toggle('dim', !ok);
+  });
+}
+
+// ---- detail panel ----
+function clearSelectionVisuals(){
+  document.querySelectorAll('.task-bar.selected').forEach(el=>el.classList.remove('selected'));
+  document.querySelectorAll('.ms-diamond.selected').forEach(el=>el.classList.remove('selected'));
+}
+function depChips(depStr){
+  if(!depStr || depStr==='None') return '<span style="color:var(--muted);font-size:12px;">None</span>';
+  return depStr.split(',').map(s=>s.trim()).map(id=>{
+    const exists = TASKS.some(t=>t.id===id);
+    return `<span class="dep-chip" ${exists?`data-goto-task="${id}"`:''}>${id}</span>`;
+  }).join('');
+}
+function milestoneLinkFromOutput(output){
+  const m = output && output.match(/^(M\d{1,2})\b/);
+  if(m && MILESTONES.some(x=>x.id===m[1])) return m[1];
+  return null;
+}
+
+function showTaskDetail(t, editing){
+  selectedTaskId=t.id; selectedMsId=null; selectedWsCode=null;
+  clearSelectionVisuals();
+  const el = document.querySelector(`[data-task="${t.id}"]`);
+  if(el) el.classList.add('selected');
+  const msLink = milestoneLinkFromOutput(t.output);
+  const wsName = WORKSTREAMS.find(w=>w.code===t.ws);
+  const edited = isEdited(t.id);
+
+  if(editing){
+    panel.innerHTML = `
+      <button class="panel-close" data-close aria-label="Close">&times;</button>
+      <div class="kicker mono">${t.id} &middot; Editing</div>
+      <h3>${t.name}</h3>
+      <div class="form-row"><label for="f-start">Start date</label><input type="date" id="f-start" value="${toISO(t.start)}" min="2026-06-01" max="2026-12-31"></div>
+      <div class="form-row"><label for="f-finish">Finish date</label><input type="date" id="f-finish" value="${toISO(t.finish)}" min="2026-06-01" max="2026-12-31"></div>
+      <div class="form-row"><label for="f-owner">Owner / lead</label><input type="text" id="f-owner" value="${t.owner.replace(/"/g,'&quot;')}"></div>
+      <div class="err" id="f-err" hidden></div>
+      <div class="btn-row">
+        <button class="btn primary" data-save="${t.id}">Save changes</button>
+        <button class="btn" data-cancel="${t.id}">Cancel</button>
+      </div>
+    `;
+    bindPanelLinks();
+    return;
+  }
+
+  panel.innerHTML = `
+    <button class="panel-close" data-close aria-label="Close">&times;</button>
+    <div class="kicker mono">${t.id} &middot; Phase ${t.phase}</div>
+    <h3>${t.name}</h3>
+    <div class="lead">${PHASES[t.phase].label}</div>
+    <div class="kv"><span class="k">Status</span><span class="v"><span class="status-pill st-${t.status}">${STATUS_LABELS[t.status]}</span>${edited?' <span class="badge edited">Edited</span>':''}</span></div>
+    <div class="kv"><span class="k">Owner</span><span class="v">${t.owner}</span></div>
+    <div class="kv"><span class="k">Workstream</span><span class="v"><span class="dep-chip" data-goto-ws="${t.ws}">${t.ws} &middot; ${wsName.name}</span></span></div>
+    <div class="kv"><span class="k">Start</span><span class="v mono">${fmtDate(t.start)}, ${YEAR}</span></div>
+    <div class="kv"><span class="k">Finish</span><span class="v mono">${fmtDate(t.finish)}, ${YEAR}</span></div>
+    <div class="kv"><span class="k">Duration</span><span class="v mono">${t.dur} day${t.dur===1?'':'s'}</span></div>
+    <div class="kv"><span class="k">Critical path</span><span class="v">${t.cp?'<span class="badge cpb">CP</span>':'No'}</span></div>
+    <div class="panel-section-title">Set status</div>
+    <div class="seg" role="group" aria-label="Set status">
+      <button data-set-status="pending" class="${t.status==='pending'?'on-pending':''}">Pending</button>
+      <button data-set-status="complete" class="${t.status==='complete'?'on-complete':''}">Complete</button>
+      <button data-set-status="flagged" class="${t.status==='flagged'?'on-flagged':''}">Flagged</button>
+    </div>
+    <div class="btn-row">
+      <button class="btn" data-edit="${t.id}">Edit dates &amp; owner</button>
+      ${edited?`<button class="btn ghost" data-revert="${t.id}">Revert to plan</button>`:''}
+    </div>
+    <div class="panel-section-title">Dependency</div>
+    <div class="chips-wrap">${depChips(t.dependency)}</div>
+    <div class="panel-section-title">Output</div>
+    <div style="font-size:13px;">${t.output}${msLink?` <span class="dep-chip" data-goto-ms="${msLink}">View ${msLink}</span>`:''}</div>
+  `;
+  bindPanelLinks();
+}
+
+function showWsDetail(code){
+  selectedWsCode=code; selectedTaskId=null; selectedMsId=null;
+  clearSelectionVisuals();
+  const w = WORKSTREAMS.find(x=>x.code===code);
+  const list = TASKS.filter(t=>t.ws===code).sort((a,b)=>a.s-b.s);
+  const cpCount = list.filter(t=>t.cp).length;
+  const doneCount = list.filter(t=>t.status==='complete').length;
+  const flagCount = list.filter(t=>t.status==='flagged').length;
+  const first = list.reduce((a,b)=>a.s<=b.s?a:b), last = list.reduce((a,b)=>a.f>=b.f?a:b);
+  panel.innerHTML = `
+    <button class="panel-close" data-close aria-label="Close">&times;</button>
+    <div class="kicker mono">${code}</div>
+    <h3>${w.name}</h3>
+    <div class="lead">${w.lead}</div>
+    <div class="kv"><span class="k">Deliverables</span><span class="v">${list.length}</span></div>
+    <div class="kv"><span class="k">Critical path</span><span class="v">${cpCount}</span></div>
+    <div class="kv"><span class="k">Complete</span><span class="v">${doneCount}</span></div>
+    <div class="kv"><span class="k">Flagged</span><span class="v">${flagCount}</span></div>
+    <div class="kv"><span class="k">Span</span><span class="v mono">${fmtDate(first.start)} - ${fmtDate(last.finish)}</span></div>
+    <div class="panel-section-title">Deliverables (chronological)</div>
+    ${list.map(t=>`<div class="task-list-row" data-goto-task="${t.id}">
+      <div class="tlr-top"><span class="tlr-id">${t.id}</span><span>${t.status!=='pending'?`<span class="status-pill st-${t.status}">${STATUS_LABELS[t.status]}</span> `:''}${t.cp?'<span class="badge cpb">CP</span>':''}</span></div>
+      <div class="tlr-name">${t.name}</div>
+      <div class="tlr-meta">${fmtDate(t.start)}-${fmtDate(t.finish)} &middot; ${t.owner}</div>
+    </div>`).join('')}
+  `;
+  bindPanelLinks();
+}
+
+function showMsDetail(id){
+  selectedMsId=id; selectedTaskId=null; selectedWsCode=null;
+  clearSelectionVisuals();
+  const el = document.querySelector(`[data-ms="${id}"]`);
+  if(el) el.classList.add('selected');
+  const m = MILESTONES.find(x=>x.id===id);
+  const linked = TASKS.filter(t=> t.output===id || (t.output||'').startsWith(id+' '));
+  panel.innerHTML = `
+    <button class="panel-close" data-close aria-label="Close">&times;</button>
+    <div class="kicker mono">${m.id} &middot; Milestone</div>
+    <h3>${m.name}</h3>
+    <div class="kv"><span class="k">Target date</span><span class="v mono">${fmtDate(m.date)}, ${YEAR}</span></div>
+    <div class="kv"><span class="k">Owner</span><span class="v">${m.owner}</span></div>
+    <div class="panel-section-title">Readiness requirement</div>
+    <div style="font-size:13px;line-height:1.6;">${m.readiness}</div>
+    ${linked.length?`<div class="panel-section-title">Delivered by</div><div class="chips-wrap">${linked.map(t=>`<span class="dep-chip" data-goto-task="${t.id}">${t.id}</span>`).join('')}</div>`:''}
+  `;
+  bindPanelLinks();
+}
+
+function bindPanelLinks(){
+  panel.querySelectorAll('[data-goto-task]').forEach(el=>el.addEventListener('click',()=>selectTaskById(el.dataset.gotoTask)));
+  panel.querySelectorAll('[data-goto-ws]').forEach(el=>el.addEventListener('click',()=>showWsDetail(el.dataset.gotoWs)));
+  panel.querySelectorAll('[data-goto-ms]').forEach(el=>el.addEventListener('click',()=>showMsDetail(el.dataset.gotoMs)));
+  panel.querySelectorAll('[data-set-status]').forEach(el=>el.addEventListener('click',()=>{
+    const t = TASKS.find(x=>x.id===selectedTaskId); if(!t) return;
+    setOverride(t.id, {status: el.dataset.setStatus});
+    renderStats(); renderToolbar(); renderChart();
+    showTaskDetail(t);
+  }));
+  panel.querySelectorAll('[data-edit]').forEach(el=>el.addEventListener('click',()=>{
+    const t = TASKS.find(x=>x.id===el.dataset.edit); if(t) showTaskDetail(t, true);
+  }));
+  panel.querySelectorAll('[data-cancel]').forEach(el=>el.addEventListener('click',()=>{
+    const t = TASKS.find(x=>x.id===el.dataset.cancel); if(t) showTaskDetail(t);
+  }));
+  panel.querySelectorAll('[data-save]').forEach(el=>el.addEventListener('click',()=>{
+    const t = TASKS.find(x=>x.id===el.dataset.save); if(!t) return;
+    const sv = panel.querySelector('#f-start').value;
+    const fv = panel.querySelector('#f-finish').value;
+    const ov = panel.querySelector('#f-owner').value.trim();
+    const err = panel.querySelector('#f-err');
+    if(!sv || !fv){ err.textContent='Both dates are required.'; err.hidden=false; return; }
+    if(new Date(fv) < new Date(sv)){ err.textContent='Finish date is before start date.'; err.hidden=false; return; }
+    setOverride(t.id, {start: fromISO(sv), finish: fromISO(fv), owner: ov || t.owner});
+    renderStats(); renderToolbar(); renderChart();
+    showTaskDetail(t);
+  }));
+  panel.querySelectorAll('[data-revert]').forEach(el=>el.addEventListener('click',()=>{
+    const t = TASKS.find(x=>x.id===el.dataset.revert); if(!t) return;
+    setOverride(t.id, Object.assign({}, BASELINE[t.id]));
+    renderStats(); renderToolbar(); renderChart();
+    showTaskDetail(t);
+  }));
+  const closeBtn = panel.querySelector('[data-close]');
+  if(closeBtn) closeBtn.addEventListener('click', ()=>{
+    clearSelectionVisuals(); selectedTaskId=null; selectedMsId=null; selectedWsCode=null;
+    panel.innerHTML = '<div class="panel-empty">Select a workstream, task bar, or milestone diamond to see full detail here. From a task you can set its status (pending, complete, flagged) with one click, or edit its dates and owner.</div>';
+  });
+}
+
+function selectTaskById(id){
+  const t = TASKS.find(x=>x.id===id);
+  if(!t) return;
+  showTaskDetail(t);
+  const el = document.querySelector(`[data-task="${id}"]`);
+  if(el){ el.scrollIntoView({behavior:'smooth', inline:'center', block:'nearest'}); el.classList.add('flash'); setTimeout(()=>el.classList.remove('flash'),900); }
+}
+
+// ---- export ----
+function buildExportHtml(){
+  const clean = TASKS.map(t=>({id:t.id,name:t.name,owner:t.owner,start:t.start,finish:t.finish,dependency:t.dependency,output:t.output,cp:t.cp,phase:t.phase,status:t.status}));
+  const json = JSON.stringify(clean).replace(/</g,'\\u003c');
+  const openTag = 'id="tasks-data">';
+  const i = PRISTINE.indexOf(openTag);
+  const j = PRISTINE.indexOf('</scr'+'ipt>', i);
+  return PRISTINE.slice(0, i+openTag.length) + '\n' + json + '\n' + PRISTINE.slice(j);
+}
+window.__buildExport = buildExportHtml;
+function downloadCopy(){
+  const html = buildExportHtml();
+  const d = new Date();
+  const stamp = d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');
+  const blob = new Blob([html], {type:'text/html'});
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = 'ABA_TEDLaw_GanttSchedule_updated_'+stamp+'.html';
+  document.body.appendChild(a);
+  a.click();
+  a.remove();
+  setTimeout(()=>URL.revokeObjectURL(a.href), 2000);
+}
+
+// ---- global wiring (once) ----
+const phaseChips = document.getElementById('phaseChips');
+phaseChips.innerHTML = Object.keys(PHASES).map(p=>`<div class="chip active" data-phase="${p}"><span class="sw" style="background:var(--phase-${p.toLowerCase()})"></span>Phase ${p}</div>`).join('');
+phaseChips.querySelectorAll('.chip').forEach(chip=>{
+  chip.addEventListener('click', ()=>{
+    const p = chip.dataset.phase;
+    if(activePhases.has(p)){ activePhases.delete(p); chip.classList.remove('active'); }
+    else { activePhases.add(p); chip.classList.add('active'); }
+    applyFilters();
+  });
+});
+searchInput.addEventListener('input', applyFilters);
+const cpToggle = document.getElementById('cpToggle');
+cpToggle.addEventListener('click', ()=>{ cpOnly=!cpOnly; cpToggle.classList.toggle('active', cpOnly); applyFilters(); });
+const flagToggle = document.getElementById('flagToggle');
+flagToggle.addEventListener('click', ()=>{ flaggedOnly=!flaggedOnly; flagToggle.classList.toggle('active', flaggedOnly); applyFilters(); });
+const hideDoneToggle = document.getElementById('hideDoneToggle');
+hideDoneToggle.addEventListener('click', ()=>{ hideDone=!hideDone; hideDoneToggle.classList.toggle('active', hideDone); applyFilters(); });
+document.getElementById('resetBtn').addEventListener('click', ()=>{
+  searchInput.value='';
+  cpOnly=false; cpToggle.classList.remove('active');
+  flaggedOnly=false; flagToggle.classList.remove('active');
+  hideDone=false; hideDoneToggle.classList.remove('active');
+  activePhases.clear(); Object.keys(PHASES).forEach(p=>activePhases.add(p));
+  phaseChips.querySelectorAll('.chip').forEach(c=>c.classList.add('active'));
+  applyFilters();
+});
+document.getElementById('downloadBtn').addEventListener('click', downloadCopy);
+
+const resetEditsBtn = document.getElementById('resetEditsBtn');
+let resetArmed=false, resetTimer=null;
+resetEditsBtn.addEventListener('click', ()=>{
+  if(!resetArmed){
+    resetArmed=true;
+    resetEditsBtn.textContent='Click again to confirm';
+    resetTimer=setTimeout(()=>{ resetArmed=false; resetEditsBtn.textContent='Reset all edits'; }, 4000);
+    return;
+  }
+  clearTimeout(resetTimer); resetArmed=false; resetEditsBtn.textContent='Reset all edits';
+  Object.keys(store.overrides).forEach(id=>{
+    const t = TASKS.find(x=>x.id===id);
+    if(t) Object.assign(t, BASELINE[id]);
+  });
+  store.overrides={}; persist();
+  renderStats(); renderToolbar(); renderChart();
+  if(selectedTaskId){ const t=TASKS.find(x=>x.id===selectedTaskId); if(t) showTaskDetail(t); }
+});
+
+// ---- reference sections (once) ----
+document.getElementById('cpList').innerHTML = CP_PRIORITIES.map(p=>`<li>${p}</li>`).join('');
+document.getElementById('gateGrid').innerHTML = GATES.map(g=>`
+  <div class="gate-card">
+    <div class="gd mono">${g.date}</div>
+    <h4>${g.name}</h4>
+    <ul>${g.items.map(i=>`<li>${i}</li>`).join('')}</ul>
+  </div>`).join('');
+document.getElementById('chainList').innerHTML = CHAINS.map(c=>`
+  <div class="chain">
+    <div class="chain-title">${c.title}</div>
+    <div class="chain-flow">${c.steps.map((s,i)=> (i>0?'<span class="chain-arrow">&#8594;</span>':'') + `<span class="chain-step">${s}</span>`).join('')}</div>
+  </div>`).join('');
+document.getElementById('ownerBody').innerHTML = OWNERS.map(o=>`<tr><td>${o[0]}</td><td>${o[1]}</td></tr>`).join('');
+
+// ---- boot ----
+renderStats();
+renderToolbar();
+renderChart();
+
+})();
+</script>
