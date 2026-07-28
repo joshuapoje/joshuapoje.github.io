@@ -1,0 +1,677 @@
+<title>ABA New Member Onboarding — Prototype</title>
+<style>
+  :root{
+    --bg:#F3F5F8; --surface:#FFFFFF; --surface-2:#EDF0F5;
+    --ink:#1B2A44; --muted:#5A6A85; --line:#DDE3EC;
+    --navy:#16305B; --navy-deep:#0E2140; --navy-soft:#E7EDF7;
+    --red:#B22335; --red-soft:#F7E9EB;
+    --ok:#2E6B4F; --ok-soft:#E6F0EB;
+    --shadow:0 1px 2px rgba(14,33,64,.06),0 8px 24px rgba(14,33,64,.07);
+    --radius:10px;
+    --display:Georgia,'Iowan Old Style','Palatino Linotype',Palatino,serif;
+    --body:'Segoe UI',system-ui,-apple-system,Roboto,Arial,sans-serif;
+  }
+  @media (prefers-color-scheme: dark){
+    :root{
+      --bg:#0F1829; --surface:#182338; --surface-2:#131D30;
+      --ink:#E8EDF5; --muted:#93A2BC; --line:#2A3A58;
+      --navy:#4C7BD9; --navy-deep:#6E96E4; --navy-soft:#1D2C4A;
+      --red:#E06A79; --red-soft:#3A2230;
+      --ok:#6FBF97; --ok-soft:#1B3229;
+      --shadow:0 1px 2px rgba(0,0,0,.35),0 8px 24px rgba(0,0,0,.35);
+    }
+  }
+  :root[data-theme="dark"]{
+    --bg:#0F1829; --surface:#182338; --surface-2:#131D30;
+    --ink:#E8EDF5; --muted:#93A2BC; --line:#2A3A58;
+    --navy:#4C7BD9; --navy-deep:#6E96E4; --navy-soft:#1D2C4A;
+    --red:#E06A79; --red-soft:#3A2230;
+    --ok:#6FBF97; --ok-soft:#1B3229;
+    --shadow:0 1px 2px rgba(0,0,0,.35),0 8px 24px rgba(0,0,0,.35);
+  }
+  :root[data-theme="light"]{
+    --bg:#F3F5F8; --surface:#FFFFFF; --surface-2:#EDF0F5;
+    --ink:#1B2A44; --muted:#5A6A85; --line:#DDE3EC;
+    --navy:#16305B; --navy-deep:#0E2140; --navy-soft:#E7EDF7;
+    --red:#B22335; --red-soft:#F7E9EB;
+    --ok:#2E6B4F; --ok-soft:#E6F0EB;
+    --shadow:0 1px 2px rgba(14,33,64,.06),0 8px 24px rgba(14,33,64,.07);
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0;padding:0}
+  body{background:var(--bg);color:var(--ink);font-family:var(--body);font-size:16px;line-height:1.55;-webkit-font-smoothing:antialiased}
+  a{color:var(--navy)}
+  button{font-family:var(--body)}
+
+  .brandbar{background:var(--navy);color:#fff;padding:.65rem 1.25rem;display:flex;align-items:center;justify-content:space-between;gap:1rem}
+  :root[data-theme="dark"] .brandbar{background:#122142}
+  @media (prefers-color-scheme: dark){ .brandbar{background:#122142} }
+  :root[data-theme="light"] .brandbar{background:var(--navy)}
+  .brandbar .wordmark{font-family:var(--display);font-size:1rem;letter-spacing:.02em}
+  .brandbar .wordmark b{font-weight:700}
+  .brandbar .proto{font-size:.7rem;text-transform:uppercase;letter-spacing:.12em;border:1px solid rgba(255,255,255,.4);border-radius:999px;padding:.15rem .6rem;opacity:.9;white-space:nowrap}
+
+  .wrap{max-width:660px;margin:0 auto;padding:2.25rem 1.25rem 4rem}
+  .wrap.wide{max-width:900px}
+
+  .progresshead{display:flex;align-items:baseline;justify-content:space-between;margin-bottom:.5rem}
+  .steplabel{font-size:.72rem;text-transform:uppercase;letter-spacing:.14em;color:var(--muted)}
+  .track{height:4px;background:var(--line);border-radius:2px;overflow:hidden;margin-bottom:1.75rem}
+  .track .fill{height:100%;background:var(--red);width:0%;transition:width .35s ease}
+
+  .card{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);box-shadow:var(--shadow);padding:2rem 2rem 1.5rem}
+  @media (max-width:560px){ .card{padding:1.4rem 1.1rem 1.1rem} }
+
+  h1,h2{font-family:var(--display);font-weight:700;line-height:1.2;text-wrap:balance;margin:0 0 .5rem}
+  h1{font-size:1.9rem}
+  h2{font-size:1.45rem}
+  .sub{color:var(--muted);margin:0 0 1.5rem;max-width:46ch}
+
+  .options{display:flex;flex-direction:column;gap:.6rem;margin-bottom:1.4rem}
+  .options.grid2{display:grid;grid-template-columns:1fr 1fr;gap:.6rem}
+  @media (max-width:560px){ .options.grid2{grid-template-columns:1fr} }
+  .opt{display:flex;align-items:flex-start;gap:.75rem;text-align:left;width:100%;background:var(--surface);border:1px solid var(--line);border-radius:8px;padding:.8rem .95rem;cursor:pointer;color:var(--ink);font-size:.95rem;transition:border-color .15s,background .15s}
+  .opt:hover{border-color:var(--navy)}
+  .opt:focus-visible,.btn:focus-visible,.linklike:focus-visible,.dismiss:focus-visible{outline:2px solid var(--navy);outline-offset:2px}
+  .opt .tick{flex:none;width:18px;height:18px;margin-top:.15rem;border:2px solid var(--line);border-radius:50%;position:relative;transition:border-color .15s,background .15s}
+  .opt.multi .tick{border-radius:4px}
+  .opt.selected{border-color:var(--navy);background:var(--navy-soft)}
+  .opt.selected .tick{border-color:var(--navy);background:var(--navy)}
+  .opt.selected .tick::after{content:"";position:absolute;inset:0;margin:auto;width:6px;height:6px;background:#fff;border-radius:50%}
+  .opt.multi.selected .tick::after{width:8px;height:8px;border-radius:2px}
+  .opt .lbl{font-weight:600}
+  .opt .hint{display:block;font-weight:400;font-size:.82rem;color:var(--muted);margin-top:.1rem}
+
+  .field{margin-bottom:1.4rem}
+  .field label{display:block;font-size:.72rem;text-transform:uppercase;letter-spacing:.14em;color:var(--muted);margin-bottom:.4rem}
+  .field input{width:100%;padding:.7rem .85rem;font-size:1rem;border:1px solid var(--line);border-radius:8px;background:var(--surface);color:var(--ink);font-family:var(--body)}
+  .field input:focus{outline:2px solid var(--navy);outline-offset:1px;border-color:var(--navy)}
+
+  .actions{display:flex;align-items:center;justify-content:space-between;gap:1rem;border-top:1px solid var(--line);padding-top:1.1rem;margin-top:.25rem}
+  .actions .right{display:flex;align-items:center;gap:1rem}
+  .btn{border:none;border-radius:8px;padding:.65rem 1.35rem;font-size:.95rem;font-weight:600;cursor:pointer;background:var(--navy);color:#fff;transition:background .15s}
+  :root[data-theme="dark"] .btn{color:#0F1829}
+  @media (prefers-color-scheme: dark){ .btn{color:#0F1829} :root[data-theme="light"] .btn{color:#fff} }
+  .btn:hover{background:var(--navy-deep)}
+  .btn:disabled{opacity:.45;cursor:not-allowed}
+  .btn.ghost{background:transparent;color:var(--navy);border:1px solid var(--line)}
+  .btn.ghost:hover{border-color:var(--navy);background:var(--navy-soft)}
+  .linklike{background:none;border:none;padding:0;color:var(--muted);font-size:.9rem;cursor:pointer;text-decoration:underline;text-underline-offset:3px}
+  .linklike:hover{color:var(--ink)}
+
+  /* ---------- Get Started page ---------- */
+  .gs-hero{margin:0 0 1.75rem}
+  .gs-hero h1{font-size:2.15rem}
+  .gs-hero .sub{margin-bottom:1rem}
+  .chips{display:flex;flex-wrap:wrap;gap:.45rem;margin-bottom:.35rem}
+  .chip{font-size:.78rem;font-weight:600;background:var(--surface);border:1px solid var(--line);border-radius:999px;padding:.25rem .75rem;color:var(--muted)}
+  .gs-section{margin:2.1rem 0 0}
+  .gs-section > .sect-head{display:flex;align-items:baseline;gap:.75rem;margin-bottom:.9rem}
+  .gs-section h2{margin:0}
+  .gs-section .rule{flex:1;height:1px;background:var(--line)}
+  .cards{display:grid;grid-template-columns:1fr 1fr;gap:.9rem}
+  @media (max-width:700px){ .cards{grid-template-columns:1fr} }
+  .gcard{position:relative;background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);box-shadow:var(--shadow);padding:1.1rem 1.15rem 1rem;display:flex;flex-direction:column;gap:.45rem}
+  .gcard .why{align-self:flex-start;font-size:.72rem;font-weight:700;letter-spacing:.03em;color:var(--red);background:var(--red-soft);border-radius:4px;padding:.18rem .5rem}
+  .gcard h3{font-family:var(--display);font-size:1.08rem;margin:.1rem 0 0;line-height:1.3;padding-right:1.5rem}
+  .gcard p{margin:0;font-size:.88rem;color:var(--muted)}
+  .gcard .cta{margin-top:auto;padding-top:.55rem;font-weight:600;font-size:.9rem;text-decoration:none}
+  .gcard .cta:hover{text-decoration:underline;text-underline-offset:3px}
+  .dismiss{position:absolute;top:.6rem;right:.6rem;background:none;border:none;color:var(--muted);font-size:1rem;line-height:1;cursor:pointer;padding:.25rem;border-radius:6px}
+  .dismiss:hover{background:var(--surface-2);color:var(--ink)}
+  .hiddenbox{margin-top:2.5rem;border:1px dashed var(--line);border-radius:var(--radius);padding:1rem 1.15rem;color:var(--muted);font-size:.9rem}
+  .hiddenbox ul{margin:.5rem 0 0;padding:0;list-style:none;display:flex;flex-direction:column;gap:.35rem}
+  .hiddenbox li{display:flex;justify-content:space-between;align-items:center;gap:1rem}
+  .footer-note{margin-top:2.75rem;font-size:.78rem;color:var(--muted);border-top:1px solid var(--line);padding-top:.9rem;max-width:70ch}
+  .gs-topline{display:flex;justify-content:space-between;align-items:center;gap:1rem;margin-bottom:1.5rem}
+  .gs-topline .done{font-size:.78rem;font-weight:700;color:var(--ok);background:var(--ok-soft);border-radius:999px;padding:.25rem .8rem;letter-spacing:.04em;text-transform:uppercase}
+
+  @media (prefers-reduced-motion: reduce){
+    *{transition:none !important;animation:none !important}
+  }
+  .fadein{animation:fade .25s ease}
+  @keyframes fade{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+</style>
+
+<header class="brandbar">
+  <div class="wordmark"><b>AMERICAN BAR ASSOCIATION</b>&ensp;·&ensp;Member Onboarding</div>
+  <div class="proto">Prototype</div>
+</header>
+
+<main id="app"></main>
+
+<script>
+"use strict";
+
+/* ------------------------------------------------------------------ data */
+
+const ROLES = [
+  {id:'attorney',  lbl:'Practicing attorney',            hint:'In private practice, in-house, government, or public interest'},
+  {id:'judge',     lbl:'Judge or judicial officer',      hint:'Federal, state, tribal, or administrative bench'},
+  {id:'student',   lbl:'Law student',                    hint:'Currently enrolled in a J.D. or LL.M. program'},
+  {id:'paralegal', lbl:'Paralegal or legal professional',hint:'Working in the legal field in a non-attorney role'},
+  {id:'intl',      lbl:'International lawyer',           hint:'Licensed outside the United States'},
+  {id:'other',     lbl:'Something else',                 hint:'Retired, academic, or simply interested in the law'},
+];
+
+const STAGES = [
+  {id:'new',  lbl:'Newly admitted — 5 years or less'},
+  {id:'mid',  lbl:'6 – 15 years'},
+  {id:'sr',   lbl:'16 or more years'},
+];
+
+const GRADS = [
+  {id:'1l',  lbl:'First year (1L)'},
+  {id:'2l',  lbl:'Second year (2L)'},
+  {id:'3l',  lbl:'Third year (3L) — bar exam ahead'},
+  {id:'llm', lbl:'LL.M. or other graduate program'},
+];
+
+const SETTINGS = [
+  {id:'solo',   lbl:'Solo practice'},
+  {id:'small',  lbl:'Small firm (2–19 attorneys)'},
+  {id:'mid',    lbl:'Mid-size firm (20–99 attorneys)'},
+  {id:'large',  lbl:'Large firm (100+ attorneys)'},
+  {id:'inhouse',lbl:'In-house / corporate counsel'},
+  {id:'gov',    lbl:'Government'},
+  {id:'pubint', lbl:'Public interest / legal aid'},
+  {id:'acad',   lbl:'Academia'},
+];
+
+const COURTS = [
+  {id:'federal',lbl:'Federal court'},
+  {id:'state',  lbl:'State court'},
+  {id:'admin',  lbl:'Administrative or specialty tribunal'},
+  {id:'tribal', lbl:'Tribal or other court'},
+];
+
+const AREAS = [
+  {id:'litigation', lbl:'Litigation & dispute resolution', section:{name:'Section of Litigation', url:'https://www.americanbar.org/groups/litigation/'}},
+  {id:'business',   lbl:'Business & corporate law',        section:{name:'Business Law Section', url:'https://www.americanbar.org/groups/business_law/'}},
+  {id:'criminal',   lbl:'Criminal law',                    section:{name:'Criminal Justice Section', url:'https://www.americanbar.org/groups/criminal_justice/'}},
+  {id:'family',     lbl:'Family law',                      section:{name:'Family Law Section', url:'https://www.americanbar.org/groups/family_law/'}},
+  {id:'ip',         lbl:'Intellectual property',           section:{name:'Section of Intellectual Property Law', url:'https://www.americanbar.org/groups/intellectual_property_law/'}},
+  {id:'labor',      lbl:'Labor & employment',              section:{name:'Section of Labor and Employment Law', url:'https://www.americanbar.org/groups/labor_law/'}},
+  {id:'realprop',   lbl:'Real estate, trusts & estates',   section:{name:'Real Property, Trust and Estate Law Section', url:'https://www.americanbar.org/groups/real_property_trust_estate/'}},
+  {id:'tax',        lbl:'Tax law',                         section:{name:'Section of Taxation', url:'https://www.americanbar.org/groups/taxation/'}},
+  {id:'health',     lbl:'Health law',                      section:{name:'Health Law Section', url:'https://www.americanbar.org/groups/health_law/'}},
+  {id:'intllaw',    lbl:'International law',               section:{name:'Section of International Law', url:'https://www.americanbar.org/groups/international_law/'}},
+  {id:'tech',       lbl:'Science, technology & cyber',     section:{name:'Science & Technology Law Section', url:'https://www.americanbar.org/groups/science_technology/'}},
+  {id:'enviro',     lbl:'Environment & energy',            section:{name:'Section of Environment, Energy, and Resources', url:'https://www.americanbar.org/groups/environment_energy_resources/'}},
+];
+
+const INTERESTS = [
+  {id:'leadership', lbl:'Leadership & committee service'},
+  {id:'probono',    lbl:'Pro bono & public service'},
+  {id:'dei',        lbl:'Diversity, equity & inclusion'},
+  {id:'wellbeing',  lbl:'Lawyer well-being'},
+  {id:'legaltech',  lbl:'Legal technology & practice innovation'},
+  {id:'writing',    lbl:'Writing & speaking opportunities'},
+];
+
+const REASONS = [
+  {id:'cle',         lbl:'Earning CLE credit'},
+  {id:'networking',  lbl:'Networking & events'},
+  {id:'career',      lbl:'Career growth & job opportunities'},
+  {id:'publications',lbl:'Publications & legal research'},
+  {id:'advocacy',    lbl:'Supporting the profession & rule of law'},
+  {id:'discounts',   lbl:'Member discounts & benefits'},
+  {id:'community',   lbl:'Belonging to the legal community'},
+];
+const REASON_BARPREP = {id:'barprep', lbl:'Bar exam & early-career prep'};
+
+/* ------------------------------------------------------------------ state */
+
+const profile = { name:'', role:null, stage:null, grad:null, setting:null, court:null,
+                  areas:[], interests:[], reasons:[] };
+let stepIndex = 0;
+const hiddenCards = new Map();   // id -> card object
+
+function stepsForRole(role){
+  const s = ['welcome','role'];
+  if (role === 'attorney')  s.push('stage','setting');
+  if (role === 'student')   s.push('grad');
+  if (role === 'paralegal') s.push('setting');
+  if (role === 'judge')     s.push('court');
+  s.push('areas','interests','reasons');
+  return s;
+}
+function steps(){ return stepsForRole(profile.role); }
+
+/* ------------------------------------------------------------------ render helpers */
+
+const app = document.getElementById('app');
+const esc = s => String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+
+function shell(inner, {progress=true} = {}){
+  const list = steps();
+  const qSteps = list.length - 1;            // exclude welcome from the count
+  const qIndex = Math.max(0, stepIndex);     // welcome = 0
+  const pct = Math.round((qIndex / qSteps) * 100);
+  const head = progress && stepIndex > 0 ? `
+    <div class="progresshead">
+      <span class="steplabel">Setting up your membership</span>
+      <span class="steplabel">Step ${qIndex} of ${qSteps}</span>
+    </div>
+    <div class="track"><div class="fill" style="width:${pct}%"></div></div>` : '';
+  app.innerHTML = `<div class="wrap"><div class="fadein">${head}<div class="card">${inner}</div></div></div>`;
+}
+
+function optionButtons(items, selected, multi){
+  return items.map(o => `
+    <button type="button" class="opt ${multi?'multi':''} ${ (multi ? selected.includes(o.id) : selected===o.id) ? 'selected':''}"
+            data-opt="${o.id}" role="${multi?'checkbox':'radio'}" aria-checked="${multi ? selected.includes(o.id) : selected===o.id}">
+      <span class="tick" aria-hidden="true"></span>
+      <span><span class="lbl">${esc(o.lbl)}</span>${o.hint?`<span class="hint">${esc(o.hint)}</span>`:''}</span>
+    </button>`).join('');
+}
+
+function actionsRow({backable=true, continuable=true, disabled=false} = {}){
+  return `
+    <div class="actions">
+      <div>${backable ? `<button type="button" class="linklike" data-act="back">&larr; Back</button>` : ''}</div>
+      <div class="right">
+        <button type="button" class="linklike" data-act="skip">Skip for now</button>
+        ${continuable ? `<button type="button" class="btn" data-act="next" ${disabled?'disabled':''}>Continue</button>` : ''}
+      </div>
+    </div>`;
+}
+
+/* ------------------------------------------------------------------ step definitions */
+
+const STEP_VIEWS = {
+
+  welcome(){
+    shell(`
+      <h1>Welcome to the American Bar Association.</h1>
+      <p class="sub">You're officially a member. Before you dive in, answer a few quick questions so we can point you to the parts of the ABA that matter most to you. It takes about a minute, and every question is optional.</p>
+      <div class="field">
+        <label for="fname">What should we call you? (optional)</label>
+        <input id="fname" type="text" autocomplete="off" placeholder="First name" value="${esc(profile.name)}">
+      </div>
+      <div class="actions">
+        <div></div>
+        <div class="right">
+          <button type="button" class="linklike" data-act="skipall">Skip setup for now</button>
+          <button type="button" class="btn" data-act="next">Let's get started</button>
+        </div>
+      </div>`, {progress:false});
+    wireCommon();
+    const input = document.getElementById('fname');
+    input.addEventListener('input', e => { profile.name = e.target.value.trim(); });
+    input.addEventListener('keydown', e => { if (e.key === 'Enter') next(); });
+  },
+
+  role(){
+    shell(`
+      <h2>Which best describes you?</h2>
+      <p class="sub">This helps us tailor everything that follows.</p>
+      <div class="options">${optionButtons(ROLES, profile.role, false)}</div>
+      ${actionsRow({continuable:false})}`);
+    wireSingle('role', v => {
+      if (profile.role !== v){
+        // role changed — clear branch-specific answers
+        profile.stage = profile.grad = profile.setting = profile.court = null;
+      }
+      profile.role = v;
+    });
+  },
+
+  stage(){
+    shell(`
+      <h2>How long have you been practicing?</h2>
+      <p class="sub">Newer lawyers get different recommendations than seasoned ones — for instance, the Young Lawyers Division.</p>
+      <div class="options">${optionButtons(STAGES, profile.stage, false)}</div>
+      ${actionsRow({continuable:false})}`);
+    wireSingle('stage', v => profile.stage = v);
+  },
+
+  grad(){
+    shell(`
+      <h2>Where are you in law school?</h2>
+      <p class="sub">We'll match resources to where you are — from outlines to bar prep.</p>
+      <div class="options">${optionButtons(GRADS, profile.grad, false)}</div>
+      ${actionsRow({continuable:false})}`);
+    wireSingle('grad', v => profile.grad = v);
+  },
+
+  setting(){
+    shell(`
+      <h2>Where do you practice?</h2>
+      <p class="sub">Your practice setting shapes which communities and tools we suggest.</p>
+      <div class="options grid2">${optionButtons(SETTINGS, profile.setting, false)}</div>
+      ${actionsRow({continuable:false})}`);
+    wireSingle('setting', v => profile.setting = v);
+  },
+
+  court(){
+    shell(`
+      <h2>Where do you serve?</h2>
+      <p class="sub">The ABA's Judicial Division has communities for every bench.</p>
+      <div class="options">${optionButtons(COURTS, profile.court, false)}</div>
+      ${actionsRow({continuable:false})}`);
+    wireSingle('court', v => profile.court = v);
+  },
+
+  areas(){
+    const student = profile.role === 'student';
+    shell(`
+      <h2>${student ? 'Which areas of law interest you?' : 'What do you practice?'}</h2>
+      <p class="sub">Choose as many as apply. Each one maps to an ABA specialty section you can join.</p>
+      <div class="options grid2">${optionButtons(AREAS, profile.areas, true)}</div>
+      ${actionsRow()}`);
+    wireMulti('areas');
+  },
+
+  interests(){
+    shell(`
+      <h2>Beyond your practice, what draws you in?</h2>
+      <p class="sub">Choose as many as apply — we'll surface ways to get involved.</p>
+      <div class="options grid2">${optionButtons(INTERESTS, profile.interests, true)}</div>
+      ${actionsRow()}`);
+    wireMulti('interests');
+  },
+
+  reasons(){
+    const list = profile.role === 'student' ? [REASON_BARPREP, ...REASONS] : REASONS;
+    shell(`
+      <h2>What made you join the ABA?</h2>
+      <p class="sub">Be honest — this decides what shows up first on your Get Started page.</p>
+      <div class="options grid2">${optionButtons(list, profile.reasons, true)}</div>
+      <div class="actions">
+        <div><button type="button" class="linklike" data-act="back">&larr; Back</button></div>
+        <div class="right">
+          <button type="button" class="linklike" data-act="skip">Skip for now</button>
+          <button type="button" class="btn" data-act="next">See my Get Started page</button>
+        </div>
+      </div>`);
+    wireMulti('reasons');
+  },
+};
+
+/* ------------------------------------------------------------------ wiring */
+
+function wireCommon(){
+  app.querySelectorAll('[data-act]').forEach(b => {
+    b.addEventListener('click', () => {
+      const act = b.dataset.act;
+      if (act === 'next') next();
+      if (act === 'skip') next();
+      if (act === 'back') back();
+      if (act === 'skipall'){ stepIndex = steps().length; renderGetStarted(); }
+    });
+  });
+}
+
+function wireSingle(key, setter){
+  wireCommon();
+  app.querySelectorAll('[data-opt]').forEach(b => {
+    b.addEventListener('click', () => {
+      setter(b.dataset.opt);
+      app.querySelectorAll('[data-opt]').forEach(x => { x.classList.toggle('selected', x === b); x.setAttribute('aria-checked', x === b); });
+      setTimeout(next, 200);
+    });
+  });
+}
+
+function wireMulti(key){
+  wireCommon();
+  app.querySelectorAll('[data-opt]').forEach(b => {
+    b.addEventListener('click', () => {
+      const id = b.dataset.opt;
+      const arr = profile[key];
+      const i = arr.indexOf(id);
+      if (i >= 0) arr.splice(i,1); else arr.push(id);
+      b.classList.toggle('selected', i < 0);
+      b.setAttribute('aria-checked', i < 0);
+    });
+  });
+}
+
+function next(){
+  const list = steps();
+  stepIndex += 1;
+  if (stepIndex >= list.length){ renderGetStarted(); return; }
+  render();
+}
+function back(){
+  stepIndex = Math.max(0, stepIndex - 1);
+  render();
+}
+function render(){
+  const list = steps();
+  const id = list[stepIndex];
+  STEP_VIEWS[id]();
+  window.scrollTo({top:0});
+}
+
+/* ------------------------------------------------------------------ recommendation engine */
+
+function buildCards(){
+  const first = [], communities = [], explore = [];
+  const R = profile.reasons, I = profile.interests;
+  const add = (group, card) => group.push(card);
+
+  /* --- Start here --- */
+  if (R.includes('cle')) add(first, {
+    id:'cle', why:'Because you joined for CLE',
+    title:'Take your first CLE course',
+    desc:'Hundreds of on-demand and live programs, with a library of free CLE included in your membership.',
+    cta:'Browse CLE programs', url:'https://www.americanbar.org/events-cle/'});
+  if (R.includes('barprep')) add(first, {
+    id:'barprep', why:'Because the bar exam is ahead',
+    title:'Get bar exam & early-career resources',
+    desc:'Study guides, career advice, and student-only programming from the Law Student Division.',
+    cta:'Open student resources', url:'https://www.americanbar.org/groups/law_students/'});
+  if (R.includes('networking')) add(first, {
+    id:'events', why:'Because you joined to network',
+    title:'Find an upcoming event',
+    desc:'From national meetings to virtual roundtables — pick one and meet your first colleagues this month.',
+    cta:'See events calendar', url:'https://www.americanbar.org/events-cle/'});
+  if (R.includes('career')) add(first, {
+    id:'career', why:'Because you’re focused on your career',
+    title:'Set up job alerts on Legal Career Central',
+    desc:'The ABA’s job board for the legal profession. Create a profile and let opportunities come to you.',
+    cta:'Go to Legal Career Central', url:'https://jobs.americanbar.org/'});
+  add(first, {
+    id:'profile', why:'Recommended for every new member',
+    title:'Complete your member profile',
+    desc:'Add your license, contact preferences, and communication settings so everything else works better.',
+    cta:'Update my profile', url:'https://www.americanbar.org/membership/'});
+
+  /* --- Communities --- */
+  const areaSel = AREAS.filter(a => profile.areas.includes(a.id));
+  areaSel.slice(0,3).forEach(a => add(communities, {
+    id:'sect-'+a.id, why:`Because you selected ${a.lbl.toLowerCase()}`,
+    title:`Join the ${a.section.name}`,
+    desc:'Specialty CLE, committees, publications, and a national network in your field.',
+    cta:'Explore this section', url:a.section.url}));
+  if (profile.role === 'attorney' && profile.stage === 'new') add(communities, {
+    id:'yld', why:'Because you’re early in practice',
+    title:'You’re part of the Young Lawyers Division',
+    desc:'Free with membership for lawyers in their first years of practice — leadership tracks, mentorship, and events.',
+    cta:'See what YLD offers', url:'https://www.americanbar.org/groups/young_lawyers/'});
+  if (profile.role === 'student') add(communities, {
+    id:'lsd', why:'Because you’re a law student',
+    title:'Make the most of the Law Student Division',
+    desc:'Competitions, scholarships, and a head start on your professional network.',
+    cta:'Explore the division', url:'https://www.americanbar.org/groups/law_students/'});
+  if (profile.role === 'judge') add(communities, {
+    id:'jd', why:'Because you serve on the bench',
+    title:'Join the Judicial Division',
+    desc:'Conferences and communities for federal, state, tribal, and administrative judges.',
+    cta:'Explore the division', url:'https://www.americanbar.org/groups/judicial/'});
+  if (profile.setting === 'solo' || profile.setting === 'small') add(communities, {
+    id:'gpsolo', why:'Because you’re in solo or small-firm practice',
+    title:'Join GPSolo',
+    desc:'The division for solo, small-firm, and general practitioners — practice tools and peers who get it.',
+    cta:'Explore GPSolo', url:'https://www.americanbar.org/groups/gpsolo/'});
+  if (profile.setting === 'gov') add(communities, {
+    id:'govdiv', why:'Because you serve in government',
+    title:'Join the Government & Public Sector Lawyers Division',
+    desc:'A home base for lawyers in public service at every level of government.',
+    cta:'Explore the division', url:'https://www.americanbar.org/groups/government_public/'});
+  if (profile.role === 'intl' && !profile.areas.includes('intllaw')) add(communities, {
+    id:'intlsec', why:'Because you practice internationally',
+    title:'Join the Section of International Law',
+    desc:'Cross-border practice resources and a global network of colleagues.',
+    cta:'Explore this section', url:'https://www.americanbar.org/groups/international_law/'});
+
+  /* --- Worth exploring --- */
+  if (R.includes('publications')) add(explore, {
+    id:'journal', why:'Because you joined for publications',
+    title:'Read the ABA Journal',
+    desc:'Award-winning coverage of the legal profession, included with your membership.',
+    cta:'Read the Journal', url:'https://www.abajournal.com/'});
+  if (R.includes('advocacy')) add(explore, {
+    id:'advocacy', why:'Because you support the profession',
+    title:'See where the ABA stands',
+    desc:'How the ABA advocates for the rule of law, the courts, and the profession — and how to add your voice.',
+    cta:'Explore ABA advocacy', url:'https://www.americanbar.org/advocacy/'});
+  if (R.includes('discounts')) add(explore, {
+    id:'benefits', why:'Because you want your money’s worth',
+    title:'Unlock your member benefits',
+    desc:'Savings on insurance, travel, technology, research tools, and more.',
+    cta:'See all benefits', url:'https://www.americanbar.org/membership/'});
+  if (R.includes('community')) add(explore, {
+    id:'groups', why:'Because you joined for community',
+    title:'Browse all ABA groups',
+    desc:'Sections, divisions, and forums — find every community you’re eligible to join.',
+    cta:'Browse groups', url:'https://www.americanbar.org/groups/'});
+  if (I.includes('probono')) add(explore, {
+    id:'probono', why:'Because you care about pro bono',
+    title:'Find a pro bono opportunity',
+    desc:'The ABA’s pro bono and public service resources can match you with people who need your help.',
+    cta:'Explore pro bono', url:'https://www.americanbar.org/groups/probono_public_service/'});
+  if (I.includes('wellbeing')) add(explore, {
+    id:'wellbeing', why:'Because well-being matters',
+    title:'Explore lawyer well-being resources',
+    desc:'Confidential support and programming from the Commission on Lawyer Assistance Programs.',
+    cta:'See well-being resources', url:'https://www.americanbar.org/groups/lawyer_assistance/'});
+  if (I.includes('dei')) add(explore, {
+    id:'dei', why:'Because you value inclusion',
+    title:'Get involved in diversity & inclusion work',
+    desc:'Commissions, pipeline programs, and communities advancing equity across the profession.',
+    cta:'Explore D&I at the ABA', url:'https://www.americanbar.org/groups/diversity/'});
+  if (I.includes('legaltech')) add(explore, {
+    id:'legaltech', why:'Because you’re into legal tech',
+    title:'Sharpen your practice with the Law Practice Division',
+    desc:'Marketing, management, finance, and technology — the business side of practicing law.',
+    cta:'Explore the division', url:'https://www.americanbar.org/groups/law_practice/'});
+  if (I.includes('writing')) add(explore, {
+    id:'writing', why:'Because you want to write & speak',
+    title:'Get published or on a panel',
+    desc:'ABA sections are always looking for authors and speakers — it’s the fastest path to national visibility.',
+    cta:'Find your outlet', url:'https://www.americanbar.org/groups/'});
+  if (I.includes('leadership')) add(explore, {
+    id:'leadership', why:'Because you want to lead',
+    title:'Find a committee to serve on',
+    desc:'Committee service is how ABA leaders get their start. Most committees welcome new members year-round.',
+    cta:'Browse committees', url:'https://www.americanbar.org/groups/'});
+
+  /* --- Fallbacks so a skipped-everything flow still lands well --- */
+  if (first.length <= 1){
+    add(first, {id:'fb-cle', why:'Popular with new members',
+      title:'Explore CLE included with membership',
+      desc:'Free and discounted CLE is one of the most-used ABA benefits. See what’s available.',
+      cta:'Browse CLE', url:'https://www.americanbar.org/events-cle/'});
+  }
+  if (communities.length === 0){
+    add(communities, {id:'fb-groups', why:'A good place to start',
+      title:'Find your people in an ABA group',
+      desc:'Every practice area and career stage has a home at the ABA. Browse sections and divisions.',
+      cta:'Browse groups', url:'https://www.americanbar.org/groups/'});
+  }
+  if (explore.length === 0){
+    add(explore, {id:'fb-journal', why:'Included with membership',
+      title:'Read the ABA Journal',
+      desc:'Award-winning coverage of the legal profession, included with your membership.',
+      cta:'Read the Journal', url:'https://www.abajournal.com/'});
+    add(explore, {id:'fb-benefits', why:'Included with membership',
+      title:'See all your member benefits',
+      desc:'Savings and tools you now have access to as an ABA member.',
+      cta:'See benefits', url:'https://www.americanbar.org/membership/'});
+  }
+  return { first, communities, explore };
+}
+
+function profileChips(){
+  const chips = [];
+  const roleL = ROLES.find(r=>r.id===profile.role);
+  if (roleL) chips.push(roleL.lbl);
+  const st = STAGES.find(s=>s.id===profile.stage); if (st) chips.push(st.lbl);
+  const gr = GRADS.find(g=>g.id===profile.grad); if (gr) chips.push(gr.lbl);
+  const se = SETTINGS.find(s=>s.id===profile.setting); if (se) chips.push(se.lbl);
+  const co = COURTS.find(c=>c.id===profile.court); if (co) chips.push(co.lbl);
+  profile.areas.slice(0,3).forEach(a => { const x = AREAS.find(z=>z.id===a); if (x) chips.push(x.lbl); });
+  return chips;
+}
+
+/* ------------------------------------------------------------------ Get Started page */
+
+function cardHTML(c){
+  return `
+    <div class="gcard" data-card="${c.id}">
+      <button type="button" class="dismiss" data-hide="${c.id}" title="Not interested" aria-label="Hide: ${esc(c.title)}">&times;</button>
+      <span class="why">${esc(c.why)}</span>
+      <h3>${esc(c.title)}</h3>
+      <p>${esc(c.desc)}</p>
+      <a class="cta" href="${c.url}" target="_blank" rel="noopener">${esc(c.cta)} &rarr;</a>
+    </div>`;
+}
+
+function renderGetStarted(){
+  const groups = buildCards();
+  const all = [...groups.first, ...groups.communities, ...groups.explore];
+  const visible = (g, cap) => g.filter(c => !hiddenCards.has(c.id)).slice(0, cap);
+  const name = profile.name ? `, ${esc(profile.name)}` : '';
+  const chips = profileChips();
+
+  const section = (title, cards, cap) => visible(cards, cap).length ? `
+    <section class="gs-section">
+      <div class="sect-head"><h2>${title}</h2><div class="rule"></div></div>
+      <div class="cards">${visible(cards, cap).map(cardHTML).join('')}</div>
+    </section>` : '';
+
+  const hiddenList = [...hiddenCards.values()];
+  const hiddenBox = hiddenList.length ? `
+    <div class="hiddenbox">
+      <strong>Hidden suggestions (${hiddenList.length})</strong> — not interested now doesn’t mean never. Restore any of these:
+      <ul>${hiddenList.map(c => `<li><span>${esc(c.title)}</span><button type="button" class="linklike" data-restore="${c.id}">Restore</button></li>`).join('')}</ul>
+    </div>` : '';
+
+  app.innerHTML = `
+    <div class="wrap wide fadein">
+      <div class="gs-topline">
+        <span class="done">Membership active</span>
+        <button type="button" class="linklike" data-editanswers>Edit my answers</button>
+      </div>
+      <div class="gs-hero">
+        <h1>Let’s get started${name}.</h1>
+        <p class="sub">Based on what you told us, here’s where your membership will pay off first. Hide anything that isn’t for you — this page is yours.</p>
+        ${chips.length ? `<div class="chips">${chips.map(c=>`<span class="chip">${esc(c)}</span>`).join('')}</div>` : ''}
+      </div>
+      ${section('Start here', groups.first, 4)}
+      ${section('Communities built for you', groups.communities, 4)}
+      ${section('Worth exploring', groups.explore, 6)}
+      ${hiddenBox}
+      <p class="footer-note"><strong>Prototype notes:</strong> Links point to public americanbar.org destinations. In production, the CLE card would deep-link into the LMS, the profile card into myABA/Personify, and answers would be written to the member record for downstream personalization (email journeys in Salesforce Marketing Cloud, section recruitment, renewal messaging).</p>
+    </div>`;
+
+  app.querySelectorAll('[data-hide]').forEach(b => b.addEventListener('click', () => {
+    const c = all.find(x => x.id === b.dataset.hide);
+    if (c) hiddenCards.set(c.id, c);
+    renderGetStarted();
+  }));
+  app.querySelectorAll('[data-restore]').forEach(b => b.addEventListener('click', () => {
+    hiddenCards.delete(b.dataset.restore);
+    renderGetStarted();
+  }));
+  const edit = app.querySelector('[data-editanswers]');
+  if (edit) edit.addEventListener('click', () => { stepIndex = 1; render(); });
+  window.scrollTo({top:0});
+}
+
+/* ------------------------------------------------------------------ boot */
+render();
+</script>
